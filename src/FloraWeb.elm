@@ -2,7 +2,7 @@ module FloraWeb exposing (Msg(UrlChanged), init, subscriptions, update, view)
 
 import API exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, src)
 import Http
 import Navigation
 import Regex
@@ -57,18 +57,20 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div [] [ navBar model, viewForCurrentPage model.history ]
+    div [] [ navBar model, allAppView model.apps ]
 
 
 navBar : Model -> Html Msg
 navBar model =
     div []
-        [ h1 [] [ text "Pages" ]
-        , ul [] (List.map viewLink [ "phlox", "buttercup", "dogs" ])
-        , h1 [] [ text "History" ]
-        , ul [] (List.map viewLocation model.history)
-        , allAppView model.apps
+        [ h1 [] [ text "Navigation" ]
+        , ul [] (List.map viewLink (List.map appToNameAndLink model.apps))
         ]
+
+
+appToNameAndLink : IOSApp -> ( String, String )
+appToNameAndLink iOSApp =
+    ( iOSApp.appName, iOSApp.shortName )
 
 
 allAppView : List IOSApp -> Html Msg
@@ -78,36 +80,17 @@ allAppView iOSAppList =
 
 singleAppView : IOSApp -> Html Msg
 singleAppView iOSApp =
-    div [] [ text iOSApp.appName ]
+    div []
+        [ text iOSApp.appName
+        , img
+            [ src (Maybe.withDefault "" (List.head iOSApp.images)) ]
+            []
+        ]
 
 
-viewForCurrentPage : List Navigation.Location -> Html Msg
-viewForCurrentPage locationNavigationList =
-    let
-        currentLocation =
-            Maybe.withDefault "" (Maybe.map .hash (List.head locationNavigationList))
-    in
-    if Regex.contains (Regex.regex "buttercup") currentLocation then
-        viewButtercup
-    else if Regex.contains (Regex.regex "phlox") currentLocation then
-        viewPhlox
-    else
-        text "Home"
-
-
-viewButtercup : Html Msg
-viewButtercup =
-    text "buttercup"
-
-
-viewPhlox : Html Msg
-viewPhlox =
-    text "phlox"
-
-
-viewLink : String -> Html msg
-viewLink name =
-    li [] [ a [ href ("#" ++ name) ] [ text name ] ]
+viewLink : ( String, String ) -> Html msg
+viewLink ( name, linkName ) =
+    li [] [ a [ href ("#" ++ linkName) ] [ text name ] ]
 
 
 viewLocation : Navigation.Location -> Html msg

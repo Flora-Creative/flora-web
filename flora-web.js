@@ -9845,7 +9845,8 @@ var _user$project$FloraWeb$viewLocation = function (location) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$FloraWeb$viewLink = function (name) {
+var _user$project$FloraWeb$viewLink = function (_p0) {
+	var _p1 = _p0;
 	return A2(
 		_elm_lang$html$Html$li,
 		{ctor: '[]'},
@@ -9856,36 +9857,16 @@ var _user$project$FloraWeb$viewLink = function (name) {
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$href(
-						A2(_elm_lang$core$Basics_ops['++'], '#', name)),
+						A2(_elm_lang$core$Basics_ops['++'], '#', _p1._1)),
 					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(name),
+					_0: _elm_lang$html$Html$text(_p1._0),
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		});
-};
-var _user$project$FloraWeb$viewPhlox = _elm_lang$html$Html$text('phlox');
-var _user$project$FloraWeb$viewButtercup = _elm_lang$html$Html$text('buttercup');
-var _user$project$FloraWeb$viewForCurrentPage = function (locationNavigationList) {
-	var currentLocation = A2(
-		_elm_lang$core$Maybe$withDefault,
-		'',
-		A2(
-			_elm_lang$core$Maybe$map,
-			function (_) {
-				return _.hash;
-			},
-			_elm_lang$core$List$head(locationNavigationList)));
-	return A2(
-		_elm_lang$core$Regex$contains,
-		_elm_lang$core$Regex$regex('buttercup'),
-		currentLocation) ? _user$project$FloraWeb$viewButtercup : (A2(
-		_elm_lang$core$Regex$contains,
-		_elm_lang$core$Regex$regex('phlox'),
-		currentLocation) ? _user$project$FloraWeb$viewPhlox : _elm_lang$html$Html$text('Home'));
 };
 var _user$project$FloraWeb$singleAppView = function (iOSApp) {
 	return A2(
@@ -9894,7 +9875,22 @@ var _user$project$FloraWeb$singleAppView = function (iOSApp) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text(iOSApp.appName),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$img,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$src(
+							A2(
+								_elm_lang$core$Maybe$withDefault,
+								'',
+								_elm_lang$core$List$head(iOSApp.images))),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$FloraWeb$allAppView = function (iOSAppList) {
@@ -9902,6 +9898,9 @@ var _user$project$FloraWeb$allAppView = function (iOSAppList) {
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$FloraWeb$singleAppView, iOSAppList));
+};
+var _user$project$FloraWeb$appToNameAndLink = function (iOSApp) {
+	return {ctor: '_Tuple2', _0: iOSApp.appName, _1: iOSApp.shortName};
 };
 var _user$project$FloraWeb$navBar = function (model) {
 	return A2(
@@ -9925,42 +9924,8 @@ var _user$project$FloraWeb$navBar = function (model) {
 					A2(
 						_elm_lang$core$List$map,
 						_user$project$FloraWeb$viewLink,
-						{
-							ctor: '::',
-							_0: 'phlox',
-							_1: {
-								ctor: '::',
-								_0: 'buttercup',
-								_1: {
-									ctor: '::',
-									_0: 'dogs',
-									_1: {ctor: '[]'}
-								}
-							}
-						})),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$h1,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('History'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$ul,
-							{ctor: '[]'},
-							A2(_elm_lang$core$List$map, _user$project$FloraWeb$viewLocation, model.history)),
-						_1: {
-							ctor: '::',
-							_0: _user$project$FloraWeb$allAppView(model.apps),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
+						A2(_elm_lang$core$List$map, _user$project$FloraWeb$appToNameAndLink, model.apps))),
+				_1: {ctor: '[]'}
 			}
 		});
 };
@@ -9973,7 +9938,7 @@ var _user$project$FloraWeb$view = function (model) {
 			_0: _user$project$FloraWeb$navBar(model),
 			_1: {
 				ctor: '::',
-				_0: _user$project$FloraWeb$viewForCurrentPage(model.history),
+				_0: _user$project$FloraWeb$allAppView(model.apps),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -9983,27 +9948,27 @@ var _user$project$FloraWeb$subscriptions = function (model) {
 };
 var _user$project$FloraWeb$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'UrlChanged') {
+		var _p2 = msg;
+		if (_p2.ctor === 'UrlChanged') {
 			return {
 				ctor: '_Tuple2',
 				_0: _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						history: {ctor: '::', _0: _p0._0, _1: model.history}
+						history: {ctor: '::', _0: _p2._0, _1: model.history}
 					}),
 				_1: _elm_lang$core$Platform_Cmd$none
 			};
 		} else {
-			var _p1 = _p0._0;
-			if (_p1.ctor === 'Err') {
+			var _p3 = _p2._0;
+			if (_p3.ctor === 'Err') {
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			} else {
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{apps: _p1._0}),
+						{apps: _p3._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			}
