@@ -5,7 +5,7 @@ import Navigation
 
 
 main =
-    Navigation.program UrlChange
+    Navigation.program UrlChanged
         { init = init
         , view = view
         , update = update
