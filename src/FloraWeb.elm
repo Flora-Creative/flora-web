@@ -3,6 +3,7 @@ module FloraWeb exposing (Msg(UrlChange), init, subscriptions, update, view)
 import Html exposing (..)
 import Html.Attributes exposing (href)
 import Navigation
+import Regex
 
 
 type alias Model =
@@ -36,12 +37,41 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
+    div [] [ navBar model, viewForCurrentPage model.history ]
+
+
+navBar : Model -> Html Msg
+navBar model =
     div []
         [ h1 [] [ text "Pages" ]
-        , ul [] (List.map viewLink [ "bears", "cats", "dogs", "elephants", "fish" ])
+        , ul [] (List.map viewLink [ "phlox", "buttercup", "dogs" ])
         , h1 [] [ text "History" ]
         , ul [] (List.map viewLocation model.history)
         ]
+
+
+viewForCurrentPage : List Navigation.Location -> Html Msg
+viewForCurrentPage locationNavigationList =
+    let
+        currentLocation =
+            Maybe.withDefault "" (Maybe.map .hash (List.head locationNavigationList))
+    in
+    if Regex.contains (Regex.regex "buttercup") currentLocation then
+        viewButtercup
+    else if Regex.contains (Regex.regex "phlox") currentLocation then
+        viewPhlox
+    else
+        text "Home"
+
+
+viewButtercup : Html Msg
+viewButtercup =
+    text "buttercup"
+
+
+viewPhlox : Html Msg
+viewPhlox =
+    text "phlox"
 
 
 viewLink : String -> Html msg
