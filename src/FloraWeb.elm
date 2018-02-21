@@ -11,6 +11,7 @@ import Regex
 type alias Model =
     { history : List Navigation.Location
     , apps : List IOSApp
+    , hasFinishedLoading : Bool
     }
 
 
@@ -18,6 +19,7 @@ init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
     ( { history = [ location ]
       , apps = []
+      , hasFinishedLoading = False
       }
     , fetchAllApps
     )
@@ -44,10 +46,11 @@ update msg model =
         ReceivedAllApps result ->
             case result of
                 Err error ->
-                    ( model, Cmd.none )
+                    Debug.log (toString error)
+                        ( { model | hasFinishedLoading = True }, Cmd.none )
 
                 Ok apps ->
-                    ( { model | apps = apps }, Cmd.none )
+                    ( { model | apps = apps, hasFinishedLoading = True }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -57,14 +60,68 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div [] [ navBar model, allAppView model.apps ]
+    case model.hasFinishedLoading of
+        True ->
+            case List.isEmpty model.apps of
+                True ->
+                    div [] [ navBar model, errorView model, footerView ]
+
+                False ->
+                    div [] [ navBar model, contentView model, footerView ]
+
+        False ->
+            loadingView model
+
+
+errorView : Model -> Html Msg
+errorView model =
+    div [] [ text "Did encounter error" ]
+
+
+loadingView : Model -> Html Msg
+loadingView model =
+    div [] [ text "we are loading" ]
+
+
+footerView : Html Msg
+footerView =
+    div [ basicStyle ] [ text "Copyright Flora Creative." ]
+
+
+contentView : Model -> Html Msg
+contentView model =
+    case List.head model.history of
+        Just location ->
+            case
+                List.head
+                    (List.filter (\app -> "#" ++ app.shortName == location.hash)
+                        model.apps
+                    )
+            of
+                Just app ->
+                    singleAppView app
+
+                Nothing ->
+                    div [ basicStyle ] [ text "No content yet!" ]
+
+        Nothing ->
+            allAppView model.apps
 
 
 navBar : Model -> Html Msg
 navBar model =
     div []
-        [ h1 [] [ text "Navigation" ]
-        , ul [] (List.map viewLink (List.map appToNameAndLink model.apps))
+        [ h1 [ basicStyle ] [ text "Navigation" ]
+        , div [ basicStyle ] (List.map viewLink (List.map appToNameAndLink model.apps))
+        ]
+
+
+basicStyle : Attribute Msg
+basicStyle =
+    Html.Attributes.style
+        [ ( "width", "100%" )
+        , ( "font-size", "2em" )
+        , ( "text-align", "center" )
         ]
 
 
@@ -80,10 +137,12 @@ allAppView iOSAppList =
 
 singleAppView : IOSApp -> Html Msg
 singleAppView iOSApp =
-    div []
+    div [ basicStyle ]
         [ text iOSApp.appName
+        , text iOSApp.appDescription
+        , button [] []
         , img
-            [ src (Maybe.withDefault "" (List.head iOSApp.images)) ]
+            [ src iOSApp.appIcon ]
             []
         ]
 
