@@ -19774,6 +19774,34 @@ var _debois$elm_mdl$Material_Spinner$Config = F2(
 		return {active: a, singleColor: b};
 	});
 
+var _debois$elm_mdl$Material_Typography$uppercase = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-uppercase');
+var _debois$elm_mdl$Material_Typography$lowercase = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-lowercase');
+var _debois$elm_mdl$Material_Typography$capitalize = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-capitalize');
+var _debois$elm_mdl$Material_Typography$justify = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-justify');
+var _debois$elm_mdl$Material_Typography$right = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-right');
+var _debois$elm_mdl$Material_Typography$left = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-left');
+var _debois$elm_mdl$Material_Typography$center = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-center');
+var _debois$elm_mdl$Material_Typography$tableStriped = _debois$elm_mdl$Material_Options$cs('mdl-typography--table-striped');
+var _debois$elm_mdl$Material_Typography$nowrap = _debois$elm_mdl$Material_Options$cs('mdl-typography--text-nowrap');
+var _debois$elm_mdl$Material_Typography$contrast = function (x) {
+	return A2(
+		_debois$elm_mdl$Material_Options$css,
+		'opacity',
+		_elm_lang$core$Basics$toString(x));
+};
+var _debois$elm_mdl$Material_Typography$menu = _debois$elm_mdl$Material_Options$cs('mdl-typography--menu-color-contrast');
+var _debois$elm_mdl$Material_Typography$button = _debois$elm_mdl$Material_Options$cs('mdl-typography--button-color-contrast');
+var _debois$elm_mdl$Material_Typography$caption = _debois$elm_mdl$Material_Options$cs('mdl-typography--caption-force-preferred-font-color-contrast');
+var _debois$elm_mdl$Material_Typography$body2 = _debois$elm_mdl$Material_Options$cs('mdl-typography--body-2-force-preferred-font-color-contrast');
+var _debois$elm_mdl$Material_Typography$body1 = _debois$elm_mdl$Material_Options$cs('mdl-typography--body-1-force-preferred-font-color-contrast');
+var _debois$elm_mdl$Material_Typography$subhead = _debois$elm_mdl$Material_Options$cs('mdl-typography--subhead-color-contrast');
+var _debois$elm_mdl$Material_Typography$title = _debois$elm_mdl$Material_Options$cs('mdl-typography--title-color-contrast');
+var _debois$elm_mdl$Material_Typography$headline = _debois$elm_mdl$Material_Options$cs('mdl-typography--headline-color-contrast');
+var _debois$elm_mdl$Material_Typography$display4 = _debois$elm_mdl$Material_Options$cs('mdl-typography--display-4-color-contrast');
+var _debois$elm_mdl$Material_Typography$display3 = _debois$elm_mdl$Material_Options$cs('mdl-typography--display-3-color-contrast');
+var _debois$elm_mdl$Material_Typography$display2 = _debois$elm_mdl$Material_Options$cs('mdl-typography--display-2-color-contrast');
+var _debois$elm_mdl$Material_Typography$display1 = _debois$elm_mdl$Material_Options$cs('mdl-typography--display-1-color-contrast');
+
 var _elm_lang$http$Native_Http = function() {
 
 
@@ -20681,11 +20709,19 @@ var _user$project$FloraWeb$viewLink = function (_p0) {
 var _user$project$FloraWeb$appIconStyle = _elm_lang$html$Html_Attributes$style(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '50%'},
+		_0: {ctor: '_Tuple2', _0: 'width', _1: '35%'},
 		_1: {
 			ctor: '::',
 			_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '20%'},
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'display', _1: 'block'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto'},
+					_1: {ctor: '[]'}
+				}
+			}
 		}
 	});
 var _user$project$FloraWeb$appIconGridStyle = {
@@ -20700,10 +20736,10 @@ var _user$project$FloraWeb$appIconGridStyle = {
 					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding', _1: '2rem'},
+						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '2em'},
 							_1: {ctor: '[]'}
 						}
 					}
@@ -20711,20 +20747,117 @@ var _user$project$FloraWeb$appIconGridStyle = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$FloraWeb$loadingView = function (model) {
-	return _debois$elm_mdl$Material_Spinner$spinner(
+var _user$project$FloraWeb$floraProjectDescription = function (model) {
+	return A2(
+		_elm_lang$html$Html$h4,
 		{
 			ctor: '::',
-			_0: _debois$elm_mdl$Material_Spinner$active(true),
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('\n    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.\n\n    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.\n         '),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$FloraWeb$floraProjectTitle = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('flora project'),
+					_1: {ctor: '[]'}
+				}),
 			_1: {
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Spinner$singleColor(true),
+				_0: A2(
+					_elm_lang$html$Html$h3,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'padding', _1: '0.5em'},
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('audio effects'),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
-					_0: _debois$elm_mdl$Material_Options$center,
+					_0: _user$project$FloraWeb$floraProjectDescription(model),
 					_1: {ctor: '[]'}
 				}
 			}
+		});
+};
+var _user$project$FloraWeb$loadingView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '15em'},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Spinner$spinner(
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Spinner$active(true),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Spinner$singleColor(true),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$center,
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$FloraWeb$errorView = function (model) {
@@ -20782,85 +20915,208 @@ var _user$project$FloraWeb$footerView = A2(
 		_0: _elm_lang$html$Html$text('Copyright Flora Creative.'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$FloraWeb$appIconView = function (app) {
-	return A2(
-		_debois$elm_mdl$Material_Grid$cell,
-		{
-			ctor: '::',
-			_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 3),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$img,
-				{
+var _user$project$FloraWeb$backgroundColor = A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$BlueGrey, _debois$elm_mdl$Material_Color$S50);
+var _user$project$FloraWeb$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$FloraWeb$Model = F4(
+	function (a, b, c, d) {
+		return {mdl: a, history: b, apps: c, hasFinishedLoading: d};
+	});
+var _user$project$FloraWeb$Mdl = function (a) {
+	return {ctor: 'Mdl', _0: a};
+};
+var _user$project$FloraWeb$update = F2(
+	function (msg, model) {
+		var _p4 = msg;
+		switch (_p4.ctor) {
+			case 'UrlChanged':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							history: {ctor: '::', _0: _p4._0, _1: model.history}
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ReceivedAllApps':
+				var _p5 = _p4._0;
+				if (_p5.ctor === 'Err') {
+					return A2(
+						_elm_lang$core$Debug$log,
+						_elm_lang$core$Basics$toString(_p5._0),
+						{
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{hasFinishedLoading: true}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						});
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{apps: _p5._0, hasFinishedLoading: true}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			default:
+				return A3(_debois$elm_mdl$Material$update, _user$project$FloraWeb$Mdl, _p4._0, model);
+		}
+	});
+var _user$project$FloraWeb$appIconButton = F2(
+	function (app, model) {
+		return A5(
+			_debois$elm_mdl$Material_Button$render,
+			_user$project$FloraWeb$Mdl,
+			{
+				ctor: '::',
+				_0: 0,
+				_1: {ctor: '[]'}
+			},
+			model.mdl,
+			{
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Button$flat,
+				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$src(app.appIcon),
-					_1: {
-						ctor: '::',
-						_0: _user$project$FloraWeb$appIconStyle,
-						_1: {ctor: '[]'}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {
+					_0: _debois$elm_mdl$Material_Options$attribute(
+						_elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'height', _1: '18em'},
+								_1: {ctor: '[]'}
+							})),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$br,
-					{ctor: '[]'},
+					_elm_lang$html$Html$img,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$src(app.appIcon),
+						_1: {
+							ctor: '::',
+							_0: _user$project$FloraWeb$appIconStyle,
+							_1: {ctor: '[]'}
+						}
+					},
 					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _user$project$FloraWeb$avenir,
-							_1: {
+						_elm_lang$html$Html$br,
+						{ctor: '[]'},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$style(
-									{
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-										_1: {
+								_0: _user$project$FloraWeb$avenir,
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$style(
+										{
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'width', _1: '50%'},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
-												_1: {ctor: '[]'}
-											}
-										}
-									}),
+											_0: {ctor: '_Tuple2', _0: 'color', _1: '#444140'},
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(app.appName),
 								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(app.appName),
-							_1: {ctor: '[]'}
-						}),
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _user$project$FloraWeb$appIconView = function (_p6) {
+	var _p7 = _p6;
+	return A2(
+		_debois$elm_mdl$Material_Grid$cell,
+		{
+			ctor: '::',
+			_0: A2(_debois$elm_mdl$Material_Grid$size, _debois$elm_mdl$Material_Grid$All, 4),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Typography$center,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Typography$title,
 					_1: {ctor: '[]'}
 				}
 			}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$FloraWeb$appIconButton, _p7._0, _p7._1),
+			_1: {ctor: '[]'}
 		});
 };
-var _user$project$FloraWeb$appIconViews = function (apps) {
-	return A2(_elm_lang$core$List$map, _user$project$FloraWeb$appIconView, apps);
+var _user$project$FloraWeb$appIconViews = function (model) {
+	return A2(
+		_elm_lang$core$List$map,
+		_user$project$FloraWeb$appIconView,
+		A2(
+			_elm_lang$core$List$map,
+			function (app) {
+				return {ctor: '_Tuple2', _0: app, _1: model};
+			},
+			model.apps));
 };
 var _user$project$FloraWeb$appIconNavigationView = function (model) {
 	return A2(
-		_debois$elm_mdl$Material_Grid$grid,
-		_user$project$FloraWeb$appIconGridStyle,
-		_user$project$FloraWeb$appIconViews(model.apps));
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'color', _1: '#605b74'},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$FloraWeb$floraProjectTitle(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Grid$grid,
+					_user$project$FloraWeb$appIconGridStyle,
+					_user$project$FloraWeb$appIconViews(model)),
+				_1: {ctor: '[]'}
+			}
+		});
 };
-var _user$project$FloraWeb$backgroundColor = A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$BlueGrey, _debois$elm_mdl$Material_Color$S50);
 var _user$project$FloraWeb$mainContentview = function (model) {
-	var _p4 = model.hasFinishedLoading;
-	if (_p4 === true) {
-		var _p5 = _elm_lang$core$List$isEmpty(model.apps);
-		if (_p5 === true) {
+	var _p8 = model.hasFinishedLoading;
+	if (_p8 === true) {
+		var _p9 = _elm_lang$core$List$isEmpty(model.apps);
+		if (_p9 === true) {
 			return A2(
 				_elm_lang$html$Html$div,
 				{ctor: '[]'},
@@ -20899,56 +21155,6 @@ var _user$project$FloraWeb$mainContentview = function (model) {
 		return _user$project$FloraWeb$loadingView(model);
 	}
 };
-var _user$project$FloraWeb$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
-var _user$project$FloraWeb$Model = F4(
-	function (a, b, c, d) {
-		return {mdl: a, history: b, apps: c, hasFinishedLoading: d};
-	});
-var _user$project$FloraWeb$Mdl = function (a) {
-	return {ctor: 'Mdl', _0: a};
-};
-var _user$project$FloraWeb$update = F2(
-	function (msg, model) {
-		var _p6 = msg;
-		switch (_p6.ctor) {
-			case 'UrlChanged':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							history: {ctor: '::', _0: _p6._0, _1: model.history}
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ReceivedAllApps':
-				var _p7 = _p6._0;
-				if (_p7.ctor === 'Err') {
-					return A2(
-						_elm_lang$core$Debug$log,
-						_elm_lang$core$Basics$toString(_p7._0),
-						{
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								model,
-								{hasFinishedLoading: true}),
-							_1: _elm_lang$core$Platform_Cmd$none
-						});
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{apps: _p7._0, hasFinishedLoading: true}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				return A3(_debois$elm_mdl$Material$update, _user$project$FloraWeb$Mdl, _p6._0, model);
-		}
-	});
 var _user$project$FloraWeb$view = function (model) {
 	return A3(
 		_debois$elm_mdl$Material_Scheme$topWithScheme,
@@ -20984,7 +21190,11 @@ var _user$project$FloraWeb$view = function (model) {
 										_1: {
 											ctor: '::',
 											_0: {ctor: '_Tuple2', _0: 'color', _1: '#d4d1cf'},
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}),

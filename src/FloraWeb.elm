@@ -5,12 +5,14 @@ import Html exposing (..)
 import Html.Attributes exposing (href, src, style)
 import Http
 import Material
+import Material.Button as Button
 import Material.Color as Color
 import Material.Grid as Grid
 import Material.Layout as Layout
 import Material.Options as Options
 import Material.Scheme
 import Material.Spinner as Loading
+import Material.Typography as Typo
 import Navigation
 import Regex
 
@@ -129,6 +131,7 @@ view model =
                         [ ( "padding", "2rem" )
                         , ( "background-color", "#2e3240" )
                         , ( "color", "#d4d1cf" )
+                        , ( "text-align", "center" )
                         ]
                     , avenir
                     ]
@@ -156,10 +159,18 @@ errorView model =
 
 loadingView : Model -> Html Msg
 loadingView model =
-    Loading.spinner
-        [ Loading.active True
-        , Loading.singleColor True
-        , Options.center
+    div
+        [ style
+            [ ( "width", "100%" )
+            , ( "background-color", "#edeae4" )
+            , ( "padding", "15em" )
+            ]
+        ]
+        [ Loading.spinner
+            [ Loading.active True
+            , Loading.singleColor True
+            , Options.center
+            ]
         ]
 
 
@@ -189,33 +200,73 @@ contentView model =
 
 appIconNavigationView : Model -> Html Msg
 appIconNavigationView model =
-    appIconViews model.apps |> Grid.grid appIconGridStyle
+    div
+        [ style
+            [ ( "width", "100%" )
+            , ( "background-color", "#edeae4" )
+            , ( "text-align", "center" )
+            , ( "color", "#605b74" )
+            ]
+        ]
+        [ floraProjectTitle model
+        , appIconViews model |> Grid.grid appIconGridStyle
+        ]
+
+
+floraProjectTitle : Model -> Html Msg
+floraProjectTitle model =
+    div []
+        [ h2 [ style [ ( "padding", "1em" ) ] ]
+            [ text "flora project" ]
+        , h3 [ style [ ( "padding", "0.5em" ) ] ]
+            [ text "audio effects" ]
+        , floraProjectDescription model
+        ]
+
+
+floraProjectDescription : Model -> Html Msg
+floraProjectDescription model =
+    h4 [ style [ ( "padding", "1em" ), ( "text-align", "center" ) ] ] [ text """
+    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.
+
+    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.
+         """ ]
 
 
 appIconGridStyle : List (Options.Style a)
 appIconGridStyle =
     [ Options.center
-    , style [ ( "width", "100%" ), ( "padding", "2rem" ), ( "background-color", "#edeae4" ) ] |> Options.attribute
+    , style [ ( "width", "100%" ), ( "background-color", "#edeae4" ), ( "padding", "2em" ) ] |> Options.attribute
     ]
 
 
-appIconViews : List IOSApp -> List (Grid.Cell Msg)
-appIconViews apps =
-    apps |> List.map appIconView
+appIconViews : Model -> List (Grid.Cell Msg)
+appIconViews model =
+    model.apps
+        |> List.map (\app -> ( app, model ))
+        |> List.map appIconView
 
 
-appIconView : IOSApp -> Grid.Cell Msg
-appIconView app =
-    Grid.cell [ Grid.size Grid.All 3 ]
+appIconView : ( IOSApp, Model ) -> Grid.Cell Msg
+appIconView ( app, model ) =
+    Grid.cell [ Grid.size Grid.All 4, Typo.center, Typo.title ]
+        [ appIconButton app model
+        ]
+
+
+appIconButton : IOSApp -> Model -> Html Msg
+appIconButton app model =
+    Button.render Mdl
+        [ 0 ]
+        model.mdl
+        [ Button.flat
+        , style [ ( "height", "18em" ) ] |> Options.attribute
+        ]
         [ img [ src app.appIcon, appIconStyle ] []
         , br [] []
         , div
             [ avenir
-            , style
-                [ ( "text-align", "center" )
-                , ( "width", "50%" )
-                , ( "padding", "1em" )
-                ]
+            , style [ ( "color", "#444140" ) ]
             ]
             [ text app.appName ]
         ]
@@ -223,7 +274,12 @@ appIconView app =
 
 appIconStyle : Html.Attribute msg
 appIconStyle =
-    style [ ( "width", "50%" ), ( "border-radius", "20%" ) ]
+    style
+        [ ( "width", "35%" )
+        , ( "border-radius", "20%" )
+        , ( "display", "block" )
+        , ( "margin", "0 auto" )
+        ]
 
 
 viewLink : ( String, String ) -> Html msg
