@@ -122,16 +122,15 @@ view model =
     Material.Scheme.topWithScheme Color.Grey Color.DeepPurple <|
         Layout.render Mdl
             model.mdl
-            [ Layout.fixedHeader
-            , Layout.fixedTabs
+            [ Layout.fixedTabs
             ]
             { header =
                 [ h1
                     [ style
-                        [ ( "padding", "2rem" )
-                        , ( "background-color", "#2e3240" )
+                        [ ( "background-color", "#2e3240" )
                         , ( "color", "#d4d1cf" )
                         , ( "text-align", "center" )
+                        , ( "letter-spacing", "7px" )
                         ]
                     , avenir
                     ]
@@ -139,11 +138,11 @@ view model =
                 ]
             , drawer = []
             , tabs =
-                ( [ text "apps", text "about", text "blog" ]
+                ( [ text "apps", text "about", text "contact", text "blog" ]
                 , [ avenir |> Options.attribute
                   , style
                         [ ( "background-color", "#2e3240" )
-                        , ( "color", "#d4d1cf" )
+                        , ( "color", "#edeae4" )
                         ]
                         |> Options.attribute
                   ]
@@ -216,9 +215,15 @@ appIconNavigationView model =
 floraProjectTitle : Model -> Html Msg
 floraProjectTitle model =
     div []
-        [ h2 [ style [ ( "padding", "1em" ) ] ]
+        [ Options.styled p
+            [ Typo.display3
+            , style [ ( "padding", "1em" ), ( "letter-spacing", "7px" ) ] |> Options.attribute
+            ]
             [ text "flora project" ]
-        , h3 [ style [ ( "padding", "0.5em" ) ] ]
+        , Options.styled p
+            [ Typo.display1
+            , style [ ( "padding-bottom", "1em" ), ( "letter-spacing", "4px" ) ] |> Options.attribute
+            ]
             [ text "audio effects" ]
         , floraProjectDescription model
         ]
@@ -226,8 +231,17 @@ floraProjectTitle model =
 
 floraProjectDescription : Model -> Html Msg
 floraProjectDescription model =
-    h4 [ style [ ( "padding", "1em" ), ( "text-align", "center" ) ] ] [ text """
+    Options.styled p
+        [ Typo.subhead
+        , style
+            [ ( "padding", "1em" )
+            , ( "text-align", "center" )
+            ]
+            |> Options.attribute
+        ]
+        [ text """
     the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.
+
 
     a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.
          """ ]
@@ -236,7 +250,7 @@ floraProjectDescription model =
 appIconGridStyle : List (Options.Style a)
 appIconGridStyle =
     [ Options.center
-    , style [ ( "width", "100%" ), ( "background-color", "#edeae4" ), ( "padding", "2em" ) ] |> Options.attribute
+    , style [ ( "width", "100%" ), ( "background-color", "#edeae4" ) ] |> Options.attribute
     ]
 
 

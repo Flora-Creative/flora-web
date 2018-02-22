@@ -20737,36 +20737,38 @@ var _user$project$FloraWeb$appIconGridStyle = {
 					_1: {
 						ctor: '::',
 						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '2em'},
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}
 				})),
 		_1: {ctor: '[]'}
 	}
 };
 var _user$project$FloraWeb$floraProjectDescription = function (model) {
-	return A2(
-		_elm_lang$html$Html$h4,
+	return A3(
+		_debois$elm_mdl$Material_Options$styled,
+		_elm_lang$html$Html$p,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
+			_0: _debois$elm_mdl$Material_Typography$subhead,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$attribute(
+					_elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+								_1: {ctor: '[]'}
+							}
+						})),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('\n    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.\n\n    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.\n         '),
+			_0: _elm_lang$html$Html$text('\n    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.\n\n\n    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.\n         '),
 			_1: {ctor: '[]'}
 		});
 };
@@ -20776,17 +20778,27 @@ var _user$project$FloraWeb$floraProjectTitle = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
+			_0: A3(
+				_debois$elm_mdl$Material_Options$styled,
+				_elm_lang$html$Html$p,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
+					_0: _debois$elm_mdl$Material_Typography$display3,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$attribute(
+							_elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '7px'},
+										_1: {ctor: '[]'}
+									}
+								})),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
@@ -20795,17 +20807,27 @@ var _user$project$FloraWeb$floraProjectTitle = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$h3,
+				_0: A3(
+					_debois$elm_mdl$Material_Options$styled,
+					_elm_lang$html$Html$p,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'padding', _1: '0.5em'},
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
+						_0: _debois$elm_mdl$Material_Typography$display1,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$attribute(
+								_elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'padding-bottom', _1: '1em'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '4px'},
+											_1: {ctor: '[]'}
+										}
+									})),
+							_1: {ctor: '[]'}
+						}
 					},
 					{
 						ctor: '::',
@@ -21166,12 +21188,8 @@ var _user$project$FloraWeb$view = function (model) {
 			model.mdl,
 			{
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Layout$fixedHeader,
-				_1: {
-					ctor: '::',
-					_0: _debois$elm_mdl$Material_Layout$fixedTabs,
-					_1: {ctor: '[]'}
-				}
+				_0: _debois$elm_mdl$Material_Layout$fixedTabs,
+				_1: {ctor: '[]'}
 			},
 			{
 				header: {
@@ -21183,16 +21201,16 @@ var _user$project$FloraWeb$view = function (model) {
 							_0: _elm_lang$html$Html_Attributes$style(
 								{
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'padding', _1: '2rem'},
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#2e3240'},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#2e3240'},
+										_0: {ctor: '_Tuple2', _0: 'color', _1: '#d4d1cf'},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'color', _1: '#d4d1cf'},
+											_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
 											_1: {
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+												_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '7px'},
 												_1: {ctor: '[]'}
 											}
 										}
@@ -21222,8 +21240,12 @@ var _user$project$FloraWeb$view = function (model) {
 							_0: _elm_lang$html$Html$text('about'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('blog'),
-								_1: {ctor: '[]'}
+								_0: _elm_lang$html$Html$text('contact'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('blog'),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					},
@@ -21239,7 +21261,7 @@ var _user$project$FloraWeb$view = function (model) {
 										_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#2e3240'},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'color', _1: '#d4d1cf'},
+											_0: {ctor: '_Tuple2', _0: 'color', _1: '#edeae4'},
 											_1: {ctor: '[]'}
 										}
 									})),
