@@ -12,6 +12,7 @@ import Material.Layout as Layout
 import Material.Options as Options
 import Material.Scheme
 import Material.Spinner as Loading
+import Material.Tabs as Tabs
 import Material.Typography as Typo
 import Navigation
 import Regex
@@ -123,6 +124,9 @@ view model =
         Layout.render Mdl
             model.mdl
             [ Layout.fixedTabs
+            , Layout.fixedHeader
+            , Layout.waterfall True
+            , Layout.transparentHeader
             ]
             { header =
                 [ h1
@@ -138,17 +142,35 @@ view model =
                 ]
             , drawer = []
             , tabs =
-                ( [ text "apps", text "about", text "contact", text "blog" ]
-                , [ avenir |> Options.attribute
+                ( [ "apps", "about", "contact", "blog" ] |> List.map tabStyling
+                , [ avenir
+                        |> Options.attribute
                   , style
                         [ ( "background-color", "#2e3240" )
                         , ( "color", "#edeae4" )
+                        , ( "text-decoration", "none" )
+                        , ( "letter-spacing", "2px" )
+                        , ( "font-feature-settings", "\"liga\" 0" )
+                        , ( "font-weight", "200" )
                         ]
                         |> Options.attribute
                   ]
                 )
             , main = [ mainContentview model ]
             }
+
+
+tabStyling : String -> Html Msg
+tabStyling tabName =
+    Options.styled p
+        [ Typo.subhead
+        , Typo.center
+        , avenir |> Options.attribute
+        , style
+            [ ( "color", "#edeae4" ), ( "text-align", "center" ), ( "vertical-align", "middle" ) ]
+            |> Options.attribute
+        ]
+        [ text tabName ]
 
 
 errorView : Model -> Html Msg
@@ -160,8 +182,7 @@ loadingView : Model -> Html Msg
 loadingView model =
     div
         [ style
-            [ ( "width", "100%" )
-            , ( "background-color", "#edeae4" )
+            [ ( "background-color", "#edeae4" )
             , ( "padding", "15em" )
             ]
         ]
@@ -169,6 +190,7 @@ loadingView model =
             [ Loading.active True
             , Loading.singleColor True
             , Options.center
+            , style [ ( "margin", "auto" ) ] |> Options.attribute
             ]
         ]
 
@@ -217,12 +239,14 @@ floraProjectTitle model =
     div []
         [ Options.styled p
             [ Typo.display3
-            , style [ ( "padding", "1em" ), ( "letter-spacing", "7px" ) ] |> Options.attribute
+            , Typo.center
+            , style [ ( "padding", "1em" ), ( "letter-spacing", "7px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
             ]
             [ text "flora project" ]
         , Options.styled p
             [ Typo.display1
-            , style [ ( "padding-bottom", "1em" ), ( "letter-spacing", "4px" ) ] |> Options.attribute
+            , Typo.center
+            , style [ ( "padding-bottom", "1em" ), ( "letter-spacing", "4px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
             ]
             [ text "audio effects" ]
         , floraProjectDescription model
@@ -233,9 +257,15 @@ floraProjectDescription : Model -> Html Msg
 floraProjectDescription model =
     Options.styled p
         [ Typo.subhead
+        , Typo.center
         , style
             [ ( "padding", "1em" )
             , ( "text-align", "center" )
+            , ( "letter-spacing", "2px" )
+            , ( "font-feature-settings", "\"liga\" 0" )
+            , ( "font-weight", "200" )
+            , ( "width", "70%" )
+            , ( "margin", "auto" )
             ]
             |> Options.attribute
         ]
@@ -250,7 +280,12 @@ floraProjectDescription model =
 appIconGridStyle : List (Options.Style a)
 appIconGridStyle =
     [ Options.center
-    , style [ ( "width", "100%" ), ( "background-color", "#edeae4" ) ] |> Options.attribute
+    , style
+        [ ( "width", "90%" )
+        , ( "background-color", "#edeae4" )
+        , ( "margin", "auto" )
+        ]
+        |> Options.attribute
     ]
 
 

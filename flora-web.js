@@ -20733,11 +20733,15 @@ var _user$project$FloraWeb$appIconGridStyle = {
 			_elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '90%'},
 					_1: {
 						ctor: '::',
 						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+							_1: {ctor: '[]'}
+						}
 					}
 				})),
 		_1: {ctor: '[]'}
@@ -20752,18 +20756,42 @@ var _user$project$FloraWeb$floraProjectDescription = function (model) {
 			_0: _debois$elm_mdl$Material_Typography$subhead,
 			_1: {
 				ctor: '::',
-				_0: _debois$elm_mdl$Material_Options$attribute(
-					_elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
-							_1: {
+				_0: _debois$elm_mdl$Material_Typography$center,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$attribute(
+						_elm_lang$html$Html_Attributes$style(
+							{
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-								_1: {ctor: '[]'}
-							}
-						})),
-				_1: {ctor: '[]'}
+								_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '2px'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'font-feature-settings', _1: '\"liga\" 0'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'font-weight', _1: '200'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'width', _1: '70%'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							})),
+					_1: {ctor: '[]'}
+				}
 			}
 		},
 		{
@@ -20786,18 +20814,26 @@ var _user$project$FloraWeb$floraProjectTitle = function (model) {
 					_0: _debois$elm_mdl$Material_Typography$display3,
 					_1: {
 						ctor: '::',
-						_0: _debois$elm_mdl$Material_Options$attribute(
-							_elm_lang$html$Html_Attributes$style(
-								{
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
-									_1: {
+						_0: _debois$elm_mdl$Material_Typography$center,
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Options$attribute(
+								_elm_lang$html$Html_Attributes$style(
+									{
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '7px'},
-										_1: {ctor: '[]'}
-									}
-								})),
-						_1: {ctor: '[]'}
+										_0: {ctor: '_Tuple2', _0: 'padding', _1: '1em'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '7px'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'font-feature-settings', _1: '\"liga\" 0'},
+												_1: {ctor: '[]'}
+											}
+										}
+									})),
+							_1: {ctor: '[]'}
+						}
 					}
 				},
 				{
@@ -20815,18 +20851,26 @@ var _user$project$FloraWeb$floraProjectTitle = function (model) {
 						_0: _debois$elm_mdl$Material_Typography$display1,
 						_1: {
 							ctor: '::',
-							_0: _debois$elm_mdl$Material_Options$attribute(
-								_elm_lang$html$Html_Attributes$style(
-									{
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'padding-bottom', _1: '1em'},
-										_1: {
+							_0: _debois$elm_mdl$Material_Typography$center,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$attribute(
+									_elm_lang$html$Html_Attributes$style(
+										{
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '4px'},
-											_1: {ctor: '[]'}
-										}
-									})),
-							_1: {ctor: '[]'}
+											_0: {ctor: '_Tuple2', _0: 'padding-bottom', _1: '1em'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '4px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'font-feature-settings', _1: '\"liga\" 0'},
+													_1: {ctor: '[]'}
+												}
+											}
+										})),
+								_1: {ctor: '[]'}
+							}
 						}
 					},
 					{
@@ -20850,15 +20894,11 @@ var _user$project$FloraWeb$loadingView = function (model) {
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+					_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'padding', _1: '15em'},
-							_1: {ctor: '[]'}
-						}
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '15em'},
+						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {ctor: '[]'}
@@ -20875,7 +20915,17 @@ var _user$project$FloraWeb$loadingView = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _debois$elm_mdl$Material_Options$center,
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$attribute(
+									_elm_lang$html$Html_Attributes$style(
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+											_1: {ctor: '[]'}
+										})),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}),
@@ -20925,6 +20975,47 @@ var _user$project$FloraWeb$avenir = _elm_lang$html$Html_Attributes$style(
 		_0: {ctor: '_Tuple2', _0: 'font-family', _1: '\"Avenir\", Times'},
 		_1: {ctor: '[]'}
 	});
+var _user$project$FloraWeb$tabStyling = function (tabName) {
+	return A3(
+		_debois$elm_mdl$Material_Options$styled,
+		_elm_lang$html$Html$p,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Typography$subhead,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Typography$center,
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$attribute(_user$project$FloraWeb$avenir),
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$attribute(
+							_elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'color', _1: '#edeae4'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'vertical-align', _1: 'middle'},
+											_1: {ctor: '[]'}
+										}
+									}
+								})),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(tabName),
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$FloraWeb$footerView = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -21189,7 +21280,19 @@ var _user$project$FloraWeb$view = function (model) {
 			{
 				ctor: '::',
 				_0: _debois$elm_mdl$Material_Layout$fixedTabs,
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Layout$fixedHeader,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Layout$waterfall(true),
+						_1: {
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Layout$transparentHeader,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
 			},
 			{
 				header: {
@@ -21232,23 +21335,26 @@ var _user$project$FloraWeb$view = function (model) {
 				drawer: {ctor: '[]'},
 				tabs: {
 					ctor: '_Tuple2',
-					_0: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('apps'),
-						_1: {
+					_0: A2(
+						_elm_lang$core$List$map,
+						_user$project$FloraWeb$tabStyling,
+						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('about'),
+							_0: 'apps',
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('contact'),
+								_0: 'about',
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('blog'),
-									_1: {ctor: '[]'}
+									_0: 'contact',
+									_1: {
+										ctor: '::',
+										_0: 'blog',
+										_1: {ctor: '[]'}
+									}
 								}
 							}
-						}
-					},
+						}),
 					_1: {
 						ctor: '::',
 						_0: _debois$elm_mdl$Material_Options$attribute(_user$project$FloraWeb$avenir),
@@ -21262,7 +21368,23 @@ var _user$project$FloraWeb$view = function (model) {
 										_1: {
 											ctor: '::',
 											_0: {ctor: '_Tuple2', _0: 'color', _1: '#edeae4'},
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'text-decoration', _1: 'none'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'letter-spacing', _1: '2px'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'font-feature-settings', _1: '\"liga\" 0'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'font-weight', _1: '200'},
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
 										}
 									})),
 							_1: {ctor: '[]'}
