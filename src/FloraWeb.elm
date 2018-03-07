@@ -1,6 +1,7 @@
 module FloraWeb exposing (Model, Msg(UrlChanged), init, subscriptions, update, view)
 
 import API exposing (..)
+import AppView
 import Html exposing (..)
 import Html.Attributes exposing (href, src, style)
 import Http
@@ -102,7 +103,7 @@ mainContentview model =
                     div [] [ errorView model, footerView ]
 
                 False ->
-                    div [] [ appIconNavigationView model, footerView ]
+                    div [] [ floraAppView model, footerView ]
 
         False ->
             loadingView model
@@ -242,6 +243,12 @@ contentView model =
 
         Nothing ->
             div [] []
+
+
+floraAppView : Model -> Html Msg
+floraAppView model =
+    div []
+        (appIconNavigationView model :: List.map AppView.view model.apps)
 
 
 appIconNavigationView : Model -> Html Msg
