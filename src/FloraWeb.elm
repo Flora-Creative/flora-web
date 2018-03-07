@@ -99,10 +99,10 @@ mainContentview model =
         True ->
             case List.isEmpty model.apps of
                 True ->
-                    div [] [ appIconNavigationView model, errorView model, footerView ]
+                    div [] [ errorView model, footerView ]
 
                 False ->
-                    div [] [ appIconNavigationView model, contentView model, footerView ]
+                    div [] [ appIconNavigationView model, footerView ]
 
         False ->
             loadingView model
@@ -142,7 +142,7 @@ view model =
                 ]
             , drawer = []
             , tabs =
-                ( [ "apps", "about", "contact", "blog" ] |> List.map tabStyling
+                ( [ "flora project", "about", "contact" ] |> List.map tabStyling
                 , [ avenir
                         |> Options.attribute
                   , style
@@ -175,7 +175,14 @@ tabStyling tabName =
 
 errorView : Model -> Html Msg
 errorView model =
-    div [] [ text "Did encounter error" ]
+    div
+        [ style
+            [ ( "background-color", "#edeae4" )
+            , ( "padding-top", "15em" )
+            , ( "padding-bottom", "15em" )
+            ]
+        ]
+        [ mainCopyStyle "Something has gone wrong. We'll be back up soon." ]
 
 
 loadingView : Model -> Html Msg
@@ -197,7 +204,25 @@ loadingView model =
 
 footerView : Html Msg
 footerView =
-    div [ avenir ] [ text "Copyright Flora Creative." ]
+    Options.styled
+        p
+        [ Typo.subhead
+        , Typo.center
+        , avenir |> Options.attribute
+        , style
+            [ ( "color", "#edeae4" ), ( "text-align", "center" ), ( "vertical-align", "middle" ) ]
+            |> Options.attribute
+        ]
+        [ text ("Copyright Flora Creative " ++ currentYear ++ ".") ]
+
+
+
+-- TODO -- make this a task with `Date` from Core
+
+
+currentYear : String
+currentYear =
+    "2018"
 
 
 contentView : Model -> Html Msg
@@ -213,7 +238,7 @@ contentView model =
                     div [] []
 
                 Nothing ->
-                    errorView model
+                    div [] []
 
         Nothing ->
             div [] []
@@ -253,8 +278,8 @@ floraProjectTitle model =
         ]
 
 
-floraProjectDescription : Model -> Html Msg
-floraProjectDescription model =
+mainCopyStyle : String -> Html Msg
+mainCopyStyle content =
     Options.styled p
         [ Typo.subhead
         , Typo.center
@@ -269,12 +294,17 @@ floraProjectDescription model =
             ]
             |> Options.attribute
         ]
-        [ text """
+        [ text content ]
+
+
+floraProjectDescription : Model -> Html Msg
+floraProjectDescription model =
+    mainCopyStyle """
     the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.
 
 
     a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.
-         """ ]
+    """
 
 
 appIconGridStyle : List (Options.Style a)

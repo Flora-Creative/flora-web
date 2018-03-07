@@ -20747,7 +20747,7 @@ var _user$project$FloraWeb$appIconGridStyle = {
 		_1: {ctor: '[]'}
 	}
 };
-var _user$project$FloraWeb$floraProjectDescription = function (model) {
+var _user$project$FloraWeb$mainCopyStyle = function (content) {
 	return A3(
 		_debois$elm_mdl$Material_Options$styled,
 		_elm_lang$html$Html$p,
@@ -20796,9 +20796,12 @@ var _user$project$FloraWeb$floraProjectDescription = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('\n    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.\n\n\n    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.\n         '),
+			_0: _elm_lang$html$Html$text(content),
 			_1: {ctor: '[]'}
 		});
+};
+var _user$project$FloraWeb$floraProjectDescription = function (model) {
+	return _user$project$FloraWeb$mainCopyStyle('\n    the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.\n\n\n    a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.\n    ');
 };
 var _user$project$FloraWeb$floraProjectTitle = function (model) {
 	return A2(
@@ -20886,6 +20889,37 @@ var _user$project$FloraWeb$floraProjectTitle = function (model) {
 			}
 		});
 };
+var _user$project$FloraWeb$contentView = function (model) {
+	var _p2 = _elm_lang$core$List$head(model.history);
+	if (_p2.ctor === 'Just') {
+		var _p3 = _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (app) {
+					return _elm_lang$core$Native_Utils.eq(
+						A2(_elm_lang$core$Basics_ops['++'], '#', app.shortName),
+						_p2._0.hash);
+				},
+				model.apps));
+		if (_p3.ctor === 'Just') {
+			return A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{ctor: '[]'});
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{ctor: '[]'});
+		}
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	}
+};
+var _user$project$FloraWeb$currentYear = '2018';
 var _user$project$FloraWeb$loadingView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -20935,39 +20969,29 @@ var _user$project$FloraWeb$loadingView = function (model) {
 var _user$project$FloraWeb$errorView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text('Did encounter error'),
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#edeae4'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding-top', _1: '15em'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'padding-bottom', _1: '15em'},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$FloraWeb$mainCopyStyle('Something has gone wrong. We\'ll be back up soon.'),
 			_1: {ctor: '[]'}
 		});
-};
-var _user$project$FloraWeb$contentView = function (model) {
-	var _p2 = _elm_lang$core$List$head(model.history);
-	if (_p2.ctor === 'Just') {
-		var _p3 = _elm_lang$core$List$head(
-			A2(
-				_elm_lang$core$List$filter,
-				function (app) {
-					return _elm_lang$core$Native_Utils.eq(
-						A2(_elm_lang$core$Basics_ops['++'], '#', app.shortName),
-						_p2._0.hash);
-				},
-				model.apps));
-		if (_p3.ctor === 'Just') {
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{ctor: '[]'});
-		} else {
-			return _user$project$FloraWeb$errorView(model);
-		}
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	}
 };
 var _user$project$FloraWeb$avenir = _elm_lang$html$Html_Attributes$style(
 	{
@@ -21016,16 +21040,47 @@ var _user$project$FloraWeb$tabStyling = function (tabName) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$FloraWeb$footerView = A2(
-	_elm_lang$html$Html$div,
+var _user$project$FloraWeb$footerView = A3(
+	_debois$elm_mdl$Material_Options$styled,
+	_elm_lang$html$Html$p,
 	{
 		ctor: '::',
-		_0: _user$project$FloraWeb$avenir,
-		_1: {ctor: '[]'}
+		_0: _debois$elm_mdl$Material_Typography$subhead,
+		_1: {
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Typography$center,
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$attribute(_user$project$FloraWeb$avenir),
+				_1: {
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$attribute(
+						_elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'color', _1: '#edeae4'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'vertical-align', _1: 'middle'},
+										_1: {ctor: '[]'}
+									}
+								}
+							})),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
 	},
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html$text('Copyright Flora Creative.'),
+		_0: _elm_lang$html$Html$text(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'Copyright Flora Creative ',
+				A2(_elm_lang$core$Basics_ops['++'], _user$project$FloraWeb$currentYear, '.'))),
 		_1: {ctor: '[]'}
 	});
 var _user$project$FloraWeb$backgroundColor = A2(_debois$elm_mdl$Material_Color$color, _debois$elm_mdl$Material_Color$BlueGrey, _debois$elm_mdl$Material_Color$S50);
@@ -21235,15 +21290,11 @@ var _user$project$FloraWeb$mainContentview = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _user$project$FloraWeb$appIconNavigationView(model),
+					_0: _user$project$FloraWeb$errorView(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$FloraWeb$errorView(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$FloraWeb$footerView,
-							_1: {ctor: '[]'}
-						}
+						_0: _user$project$FloraWeb$footerView,
+						_1: {ctor: '[]'}
 					}
 				});
 		} else {
@@ -21255,12 +21306,8 @@ var _user$project$FloraWeb$mainContentview = function (model) {
 					_0: _user$project$FloraWeb$appIconNavigationView(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$FloraWeb$contentView(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$FloraWeb$footerView,
-							_1: {ctor: '[]'}
-						}
+						_0: _user$project$FloraWeb$footerView,
+						_1: {ctor: '[]'}
 					}
 				});
 		}
@@ -21340,18 +21387,14 @@ var _user$project$FloraWeb$view = function (model) {
 						_user$project$FloraWeb$tabStyling,
 						{
 							ctor: '::',
-							_0: 'apps',
+							_0: 'flora project',
 							_1: {
 								ctor: '::',
 								_0: 'about',
 								_1: {
 									ctor: '::',
 									_0: 'contact',
-									_1: {
-										ctor: '::',
-										_0: 'blog',
-										_1: {ctor: '[]'}
-									}
+									_1: {ctor: '[]'}
 								}
 							}
 						}),
