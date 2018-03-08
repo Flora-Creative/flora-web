@@ -35,7 +35,7 @@ appImageGridStyle =
 
 appImageGridCell : String -> Grid.Cell msg
 appImageGridCell url =
-    Grid.cell [ Grid.size Grid.All 5, Typo.center ]
+    Grid.cell [ Grid.size Grid.All 6, Typo.center ]
         [ img [ src url, style [ ( "width", "90%" ) ] ] [] ]
 
 
@@ -57,13 +57,13 @@ appVideoGridCell app =
             )
         |> Maybe.map
             (\url ->
-                Grid.cell [ Grid.size Grid.All 10, Typo.center ]
+                Grid.cell [ Grid.size Grid.All 6, Typo.center ]
                     [ iframe
                         [ src url
                         , style
                             [ ( "class", "vimeo" )
                             , ( "width", "100%" )
-                            , ( "height", "35em" )
+                            , ( "height", "100%" )
                             , ( "max-width", "100%" )
                             , ( "margin", "1em 0 1.5em 0" )
                             , ( "allowfullscreen", "true" )
@@ -80,10 +80,15 @@ maybeToSingletonOrEmptyList a =
     a |> Maybe.map List.singleton |> Maybe.withDefault []
 
 
-appImageGrid : IOSApp -> Html msg
+appImageGrid : IOSApp -> List (Html msg)
 appImageGrid app =
+    [ List.map appImageGridCell app.images |> Grid.grid appImageGridStyle ]
+
+
+appImageVideoGrid : IOSApp -> Html msg
+appImageVideoGrid app =
     appVideoGridCell app
-        ++ List.map appImageGridCell app.images
+        ++ [ Grid.cell [ Grid.size Grid.All 6 ] << appImageGrid <| app ]
         |> Grid.grid appImageGridStyle
 
 
@@ -101,5 +106,5 @@ view app =
         [ h2 [ style [] ]
             [ text app.appName ]
         , appCopyStyle app.appDescription
-        , appImageGrid app
+        , appImageVideoGrid app
         ]
