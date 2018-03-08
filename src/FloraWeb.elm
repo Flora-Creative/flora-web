@@ -13,10 +13,8 @@ import Material.Layout as Layout
 import Material.Options as Options
 import Material.Scheme
 import Material.Spinner as Loading
-import Material.Tabs as Tabs
 import Material.Typography as Typo
 import Navigation
-import Regex
 
 
 -- Model
