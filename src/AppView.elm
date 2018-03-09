@@ -2,7 +2,7 @@ module AppView exposing (view)
 
 import API exposing (IOSApp)
 import Html exposing (..)
-import Html.Attributes exposing (href, src, style)
+import Html.Attributes exposing (href, src, style, id)
 import Material.Grid as Grid
 import Material.Options as Options
 import Material.Typography as Typo
@@ -102,6 +102,7 @@ view app =
             , ( "padding-top", "10em" )
             , ( "padding-bottom", "10em" )
             ]
+        , id app.shortName
         ]
         [ h2 [ style [] ]
             [ text app.appName ]

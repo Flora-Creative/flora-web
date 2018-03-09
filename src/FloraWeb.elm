@@ -15,6 +15,7 @@ import Material.Scheme
 import Material.Spinner as Loading
 import Material.Typography as Typo
 import Navigation
+import Dom.Scroll
 
 
 -- Model
@@ -344,6 +345,7 @@ appIconButton app model =
         [ 0 ]
         model.mdl
         [ Button.flat
+        , Button.link ("#" ++ app.shortName)
         , style [ ( "height", "18em" ) ] |> Options.attribute
         ]
         [ img [ src app.appIcon, appIconStyle ] []
