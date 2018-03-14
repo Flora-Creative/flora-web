@@ -28,22 +28,54 @@ appCopyStyle content =
 
 appImageGridStyle : List (Options.Style a)
 appImageGridStyle =
-    [ Options.center
-    , style [ ( "width", "90%" ), ( "margin", "auto" ) ] |> Options.attribute
+    [ style
+        [ ( "width", "100%" )
+        , ( "height", "100%" )
+        , ( "margin", "0" )
+        , ( "padding", "0" )
+        ]
+        |> Options.attribute
+    , Options.cs "mdl-grid--no-spacing"
     ]
 
 
-appImageGridCell : String -> Grid.Cell msg
-appImageGridCell url =
-    Grid.cell [ Grid.size Grid.All 6, Typo.center ]
-        [ img [ src url, style [ ( "width", "90%" ) ] ] [] ]
+appImageGridCell : Int -> String -> Grid.Cell msg
+appImageGridCell cellSize url =
+    Grid.cell [ Grid.size Grid.All cellSize, Typo.center ]
+        [ img [ src url, style [ ( "width", "95%" ) ] ] [] ]
 
 
+embedIframeStyle : Html.Attribute msg
+embedIframeStyle =
+    style
+        [ ( "top", "0" )
+        , ( "left", "0" )
+        , ( "height", "100%" )
+        , ( "width", "100%" )
+        , ( "position", "absolute" )
+        ]
 
--- This will return a List of Grid cells for laying out the video, or an empty
--- list if it cannot construct it.
+
+embedWrapperStyle : Html.Attribute msg
+embedWrapperStyle =
+    style
+        [ ( "overflow", "hidden" )
+        , ( "position", "relative" )
+        , ( "height", "0" )
+        , ( "paddingBottom", "56.25%" )
+        ]
 
 
+{-| Embed a vimeo video in a responsive wrapper
+-}
+embedVideo : String -> Html msg
+embedVideo url =
+    div [ embedWrapperStyle ] [ iframe [ src url, embedIframeStyle ] [] ]
+
+
+{-| This will return a List of Grid cells for laying out the video, or an empty
+list if it cannot construct it.
+-}
 appVideoGridCell : IOSApp -> List (Grid.Cell msg)
 appVideoGridCell app =
     app.videoLinks
@@ -58,18 +90,7 @@ appVideoGridCell app =
         |> Maybe.map
             (\url ->
                 Grid.cell [ Grid.size Grid.All 6, Typo.center ]
-                    [ iframe
-                        [ src url
-                        , style
-                            [ ( "class", "vimeo" )
-                            , ( "width", "100%" )
-                            , ( "height", "100%" )
-                            , ( "max-width", "100%" )
-                            , ( "margin", "1em 0 1.5em 0" )
-                            , ( "allowfullscreen", "true" )
-                            ]
-                        ]
-                        []
+                    [ embedVideo url
                     ]
             )
         |> maybeToSingletonOrEmptyList
@@ -82,7 +103,19 @@ maybeToSingletonOrEmptyList a =
 
 appImageGrid : IOSApp -> List (Html msg)
 appImageGrid app =
-    [ List.map appImageGridCell app.images |> Grid.grid appImageGridStyle ]
+    let
+        cellSize =
+            case List.length app.images of
+                1 ->
+                    8
+
+                2 ->
+                    7
+
+                _ ->
+                    6
+    in
+        [ List.map (appImageGridCell cellSize) app.images |> Grid.grid appImageGridStyle ]
 
 
 appImageVideoGrid : IOSApp -> Html msg
@@ -97,14 +130,14 @@ view app =
     div
         [ style
             [ ( "width", "100%" )
-            , ( "background-color", "#" ++ app.backgroundColor )
-            , ( "color", app.foregroundColor )
-            , ( "padding-top", "10em" )
-            , ( "padding-bottom", "10em" )
+            , ( "backgroundColor", app.foregroundColor )
+            , ( "color", "#" ++ app.backgroundColor )
+            , ( "paddingTop", "10em" )
+            , ( "paddingBottom", "10em" )
             ]
         , id app.shortName
         ]
-        [ h2 [ style [] ]
+        [ h2 [ style [ ( "paddingLeft", ".5em" ) ] ]
             [ text app.appName ]
         , appCopyStyle app.appDescription
         , appImageVideoGrid app
