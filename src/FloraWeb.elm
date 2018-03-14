@@ -2,6 +2,7 @@ module FloraWeb exposing (Model, Msg(UrlChanged), init, subscriptions, update, v
 
 import API exposing (..)
 import AppView
+import Dom.Scroll
 import Html exposing (..)
 import Html.Attributes exposing (href, src, style)
 import Http
@@ -15,7 +16,6 @@ import Material.Scheme
 import Material.Spinner as Loading
 import Material.Typography as Typo
 import Navigation
-import Dom.Scroll
 
 
 -- Model
@@ -235,10 +235,10 @@ contentView model =
                     |> List.head
             of
                 Just app ->
-                    div [] []
+                    div [] [ text location.hash ]
 
                 Nothing ->
-                    div [] []
+                    div [] [ text location.hash ]
 
         Nothing ->
             div [] []
@@ -271,7 +271,7 @@ floraProjectTitle model =
         [ Options.styled p
             [ Typo.display3
             , Typo.center
-            , style [ ( "padding", "1em" ), ( "letter-spacing", "7px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
+            , style [ ( "padding", "1em" ), ( "letter-spacing", "4px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
             ]
             [ text "flora project" ]
         , Options.styled p
@@ -280,7 +280,7 @@ floraProjectTitle model =
             , style [ ( "padding-bottom", "1em" ), ( "letter-spacing", "4px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
             ]
             [ text "audio effects" ]
-        , floraProjectDescription model
+        , floraProjectDescription
         ]
 
 
@@ -292,9 +292,9 @@ mainCopyStyle content =
         , style
             [ ( "padding", "1em" )
             , ( "text-align", "center" )
-            , ( "letter-spacing", "2px" )
+            , ( "letter-spacing", "1px" )
             , ( "font-feature-settings", "\"liga\" 0" )
-            , ( "font-weight", "200" )
+            , ( "font-weight", "400" )
             , ( "width", "70%" )
             , ( "margin", "auto" )
             ]
@@ -303,8 +303,8 @@ mainCopyStyle content =
         [ text content ]
 
 
-floraProjectDescription : Model -> Html Msg
-floraProjectDescription model =
+floraProjectDescription : Html Msg
+floraProjectDescription =
     mainCopyStyle """
     the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.
 
@@ -346,13 +346,17 @@ appIconButton app model =
         model.mdl
         [ Button.flat
         , Button.link ("#" ++ app.shortName)
-        , style [ ( "height", "18em" ) ] |> Options.attribute
+        , style
+            [ ( "height", "18em" )
+            , ( "vertical-align", "middle" )
+            ]
+            |> Options.attribute
         ]
         [ img [ src app.appIcon, appIconStyle ] []
         , br [] []
         , div
             [ avenir
-            , style [ ( "color", "#444140" ) ]
+            , style [ ( "color", app.foregroundColor ) ]
             ]
             [ text app.appName ]
         ]

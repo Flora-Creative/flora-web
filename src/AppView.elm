@@ -2,26 +2,47 @@ module AppView exposing (view)
 
 import API exposing (IOSApp)
 import Html exposing (..)
-import Html.Attributes exposing (href, src, style, id)
+import Html.Attributes exposing (href, id, src, style)
 import Material.Grid as Grid
 import Material.Options as Options
 import Material.Typography as Typo
 
 
-appCopyStyle : String -> Html msg
-appCopyStyle content =
-    Options.styled p
-        [ Typo.body1
+baseTextStyleWithAdditionalAttributes : List ( String, String ) -> Attribute msg
+baseTextStyleWithAdditionalAttributes attributes =
+    [ ( "padding", ".5em" )
+    , ( "letter-spacing", "1px" )
+    , ( "font-feature-settings", "\"liga\" 0" )
+    , ( "margin", "auto" )
+    ]
+        ++ attributes
+        |> style
+
+
+appTitleStyleWithTitle : String -> Html msg
+appTitleStyleWithTitle title =
+    Options.styled h2
+        [ Typo.display3
         , Typo.left
-        , style
-            [ ( "padding", ".5em" )
-            , ( "letter-spacing", "1px" )
-            , ( "font-feature-settings", "\"liga\" 0" )
-            , ( "font-weight", "200" )
-            , ( "width", "70%" )
-            , ( "margin", "auto" )
-            ]
-            |> Options.attribute
+        , [ ( "font-weight", "500" )
+          , ( "width", "70%" )
+          ]
+            |> baseTextStyleWithAdditionalAttributes
+            >> Options.attribute
+        ]
+        [ text title ]
+
+
+appCopyStyleWithText : String -> Html msg
+appCopyStyleWithText content =
+    Options.styled p
+        [ Typo.subhead
+        , Typo.left
+        , [ ( "font-weight", "350" )
+          , ( "width", "70%" )
+          ]
+            |> baseTextStyleWithAdditionalAttributes
+            >> Options.attribute
         ]
         [ text content ]
 
@@ -115,7 +136,7 @@ appImageGrid app =
                 _ ->
                     6
     in
-        [ List.map (appImageGridCell cellSize) app.images |> Grid.grid appImageGridStyle ]
+    [ List.map (appImageGridCell cellSize) app.images |> Grid.grid appImageGridStyle ]
 
 
 appImageVideoGrid : IOSApp -> Html msg
@@ -130,15 +151,14 @@ view app =
     div
         [ style
             [ ( "width", "100%" )
-            , ( "backgroundColor", app.foregroundColor )
-            , ( "color", "#" ++ app.backgroundColor )
+            , ( "backgroundColor", "#" ++ app.backgroundColor )
+            , ( "color", app.foregroundColor )
             , ( "paddingTop", "10em" )
             , ( "paddingBottom", "10em" )
             ]
         , id app.shortName
         ]
-        [ h2 [ style [ ( "paddingLeft", ".5em" ) ] ]
-            [ text app.appName ]
-        , appCopyStyle app.appDescription
+        [ appTitleStyleWithTitle app.appName
+        , appCopyStyleWithText app.appDescription
         , appImageVideoGrid app
         ]

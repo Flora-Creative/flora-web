@@ -4,6 +4,7 @@
 elm-stuff
 # elm-repl generated files
 repl-temp-*
+flora-web.js
 
 ### Node ###
 node_modules/
