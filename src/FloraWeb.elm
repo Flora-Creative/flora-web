@@ -334,7 +334,11 @@ appIconViews model =
 
 appIconView : ( IOSApp, Model ) -> Grid.Cell Msg
 appIconView ( app, model ) =
-    Grid.cell [ Grid.size Grid.All 4, Typo.center, Typo.title ]
+    Grid.cell
+        [ Grid.size Grid.All 4
+        , Typo.center
+        , Typo.title
+        ]
         [ appIconButton app model
         ]
 

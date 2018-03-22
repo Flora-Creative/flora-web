@@ -26,16 +26,35 @@ appCopyStyle content =
         [ text content ]
 
 
+appHeaderStyle : String -> Html msg
+appHeaderStyle content =
+    Options.styled h2
+        [ Typo.display1
+        , Typo.left
+        , style
+            [ ( "padding", ".5em" )
+            , ( "letter-spacing", "1px" )
+            , ( "font-feature-settings", "\"liga\" 0" )
+
+            -- , ("font-weight", "200")
+            , ( "width", "70%" )
+            , ( "margin", "auto" )
+            ]
+            |> Options.attribute
+        ]
+        [ text content ]
+
+
 appImageGridStyle : List (Options.Style a)
 appImageGridStyle =
     [ style
         [ ( "width", "100%" )
         , ( "height", "100%" )
         , ( "margin", "0" )
-        , ( "padding", "0" )
+        , ( "padding", "1em" )
         ]
         |> Options.attribute
-    , Options.cs "mdl-grid--no-spacing"
+    , Grid.noSpacing
     ]
 
 
@@ -52,6 +71,9 @@ embedIframeStyle =
         , ( "left", "0" )
         , ( "height", "100%" )
         , ( "width", "100%" )
+        , ( "paddingRight", "1em" )
+        , ( "paddingBottom", "1em" )
+        , ( "paddingTop", "1em" )
         , ( "position", "absolute" )
         ]
 
@@ -89,7 +111,11 @@ appVideoGridCell app =
             )
         |> Maybe.map
             (\url ->
-                Grid.cell [ Grid.size Grid.All 6, Typo.center ]
+                Grid.cell
+                    [ Grid.size Grid.All 6
+                    , Typo.center
+                    , Grid.stretch
+                    ]
                     [ embedVideo url
                     ]
             )
@@ -110,7 +136,7 @@ appImageGrid app =
                     8
 
                 2 ->
-                    7
+                    8
 
                 _ ->
                     6
@@ -132,13 +158,12 @@ view app =
             [ ( "width", "100%" )
             , ( "backgroundColor", app.foregroundColor )
             , ( "color", "#" ++ app.backgroundColor )
-            , ( "paddingTop", "10em" )
+            , ( "paddingTop", "5em" )
             , ( "paddingBottom", "10em" )
             ]
         , id app.shortName
         ]
-        [ h2 [ style [ ( "paddingLeft", ".5em" ) ] ]
-            [ text app.appName ]
+        [ appHeaderStyle app.appName
         , appCopyStyle app.appDescription
         , appImageVideoGrid app
         ]
