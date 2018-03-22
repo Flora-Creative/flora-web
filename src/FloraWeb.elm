@@ -17,6 +17,7 @@ import Material.Typography as Typo
 import Navigation
 import Dom.Scroll
 import About
+import Contact
 
 
 -- Model
@@ -171,6 +172,9 @@ view model =
                     -- apps
                     1 ->
                         About.view
+
+                    2 ->
+                        Contact.view
 
                     _ ->
                         mainContentview model
