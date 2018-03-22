@@ -51,7 +51,6 @@ appImageGridStyle =
         [ ( "width", "100%" )
         , ( "height", "100%" )
         , ( "margin", "0" )
-        , ( "padding", "1em" )
         ]
         |> Options.attribute
     , Grid.noSpacing
@@ -73,7 +72,7 @@ embedIframeStyle =
         , ( "width", "100%" )
         , ( "paddingRight", "1em" )
         , ( "paddingBottom", "1em" )
-        , ( "paddingTop", "1em" )
+        , ( "paddingTop", "0em" )
         , ( "position", "absolute" )
         ]
 
@@ -133,10 +132,10 @@ appImageGrid app =
         cellSize =
             case List.length app.images of
                 1 ->
-                    8
+                    12
 
                 2 ->
-                    8
+                    7
 
                 _ ->
                     6
@@ -158,8 +157,8 @@ view app =
             [ ( "width", "100%" )
             , ( "backgroundColor", app.foregroundColor )
             , ( "color", "#" ++ app.backgroundColor )
-            , ( "paddingTop", "5em" )
-            , ( "paddingBottom", "10em" )
+            , ( "paddingTop", "3em" )
+            , ( "paddingBottom", "3em" )
             ]
         , id app.shortName
         ]
