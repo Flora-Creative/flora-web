@@ -16,6 +16,9 @@ import Material.Scheme
 import Material.Spinner as Loading
 import Material.Typography as Typo
 import Navigation
+import Dom.Scroll
+import About
+import Contact
 
 
 -- Model
@@ -26,6 +29,7 @@ type alias Model =
     , history : List Navigation.Location
     , apps : List IOSApp
     , hasFinishedLoading : Bool
+    , currentTab : Int
     }
 
 
@@ -35,6 +39,7 @@ init location =
       , history = [ location ]
       , apps = []
       , hasFinishedLoading = False
+      , currentTab = 0
       }
     , fetchAllApps
     )
@@ -54,6 +59,7 @@ fetchAllApps =
 type Msg
     = UrlChanged Navigation.Location
     | ReceivedAllApps (Result Http.Error (List IOSApp))
+    | TabSelected Int
     | Mdl (Material.Msg Msg)
 
 
@@ -71,6 +77,10 @@ update msg model =
 
                 Ok apps ->
                     ( { model | apps = apps, hasFinishedLoading = True }, Cmd.none )
+
+        -- this would do navigation etc.
+        TabSelected k ->
+            ( { model | currentTab = k }, Cmd.none )
 
         Mdl msg_ ->
             Material.update Mdl msg_ model
@@ -125,6 +135,7 @@ view model =
             model.mdl
             [ Layout.fixedTabs
             , Layout.fixedHeader
+            , Layout.onSelectTab TabSelected
             , Layout.waterfall True
             , Layout.transparentHeader
             ]
@@ -156,7 +167,21 @@ view model =
                         |> Options.attribute
                   ]
                 )
-            , main = [ mainContentview model ]
+            , main =
+                [ case model.currentTab of
+                    -- TODO not pretty
+                    -- apps
+                    1 ->
+                        About.view
+
+                    2 ->
+                        Contact.view
+
+                    _ ->
+                        mainContentview model
+
+                -- about us
+                ]
             }
 
 
@@ -334,7 +359,11 @@ appIconViews model =
 
 appIconView : ( IOSApp, Model ) -> Grid.Cell Msg
 appIconView ( app, model ) =
-    Grid.cell [ Grid.size Grid.All 4, Typo.center, Typo.title ]
+    Grid.cell
+        [ Grid.size Grid.All 4
+        , Typo.center
+        , Typo.title
+        ]
         [ appIconButton app model
         ]
 

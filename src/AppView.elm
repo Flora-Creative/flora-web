@@ -53,10 +53,9 @@ appImageGridStyle =
         [ ( "width", "100%" )
         , ( "height", "100%" )
         , ( "margin", "0" )
-        , ( "padding", "0" )
         ]
         |> Options.attribute
-    , Options.cs "mdl-grid--no-spacing"
+    , Grid.noSpacing
     ]
 
 
@@ -73,6 +72,9 @@ embedIframeStyle =
         , ( "left", "0" )
         , ( "height", "100%" )
         , ( "width", "100%" )
+        , ( "paddingRight", "1em" )
+        , ( "paddingBottom", "1em" )
+        , ( "paddingTop", "0em" )
         , ( "position", "absolute" )
         ]
 
@@ -110,7 +112,11 @@ appVideoGridCell app =
             )
         |> Maybe.map
             (\url ->
-                Grid.cell [ Grid.size Grid.All 6, Typo.center ]
+                Grid.cell
+                    [ Grid.size Grid.All 6
+                    , Typo.center
+                    , Grid.stretch
+                    ]
                     [ embedVideo url
                     ]
             )
@@ -128,7 +134,7 @@ appImageGrid app =
         cellSize =
             case List.length app.images of
                 1 ->
-                    8
+                    12
 
                 2 ->
                     7
@@ -153,8 +159,8 @@ view app =
             [ ( "width", "100%" )
             , ( "backgroundColor", "#" ++ app.backgroundColor )
             , ( "color", app.foregroundColor )
-            , ( "paddingTop", "10em" )
-            , ( "paddingBottom", "10em" )
+            , ( "paddingTop", "3em" )
+            , ( "paddingBottom", "3em" )
             ]
         , id app.shortName
         ]
