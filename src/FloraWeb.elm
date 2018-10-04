@@ -100,13 +100,67 @@ subscriptions model =
         |> Sub.batch
 
 
+type Page
+    = FloraApp
+    | IndividualApp App.Model
+    | About
+    | Contact
+    | Unknown
+
+
+currentPage : Model -> Page
+currentPage model =
+    let
+        currentLocationHash =
+            model.history |> List.head |> Maybe.map (\l -> l.hash) |> Maybe.withDefault ""
+
+        appFromHash =
+            model.apps
+                |> Array.filter (\appModel -> appModel.app.shortName == currentLocationHash)
+                |> Array.toList
+                |> List.head
+    in
+    case currentLocationHash of
+        "" ->
+            FloraApp
+
+        "#flora" ->
+            FloraApp
+
+        "#about" ->
+            About
+
+        "#contact" ->
+            Contact
+
+        _ ->
+            -- Either a hash for an individual app or an unkown hash
+            appFromHash
+                |> Maybe.map IndividualApp
+                |> Maybe.withDefault Unknown
+
+
 
 -- View
 
 
 mainContentView : Model -> Html Msg
 mainContentView model =
-    floraProjectContentView model
+    case currentPage model of
+        Unknown ->
+            div [] [ errorView ]
+
+        FloraApp ->
+            floraProjectContentView model
+
+        IndividualApp appModel ->
+            floraProjectContentView model
+
+        About ->
+            div [] [ textViewWithText About.floraCreativeCopy ]
+
+        Contact ->
+            div [] [ textViewWithText "Contact us coming soon." ]
 
 
 floraProjectContentView : Model -> Html Msg
@@ -115,7 +169,7 @@ floraProjectContentView model =
         True ->
             case Array.isEmpty model.apps of
                 True ->
-                    div [] [ errorView model ]
+                    div [] [ errorView ]
 
                 False ->
                     div [] [ floraAppView model ]
@@ -146,9 +200,9 @@ menu : Model -> Html Msg
 menu model =
     Navbar.config NavMsg
         |> Navbar.withAnimation
-        |> Navbar.brand [ href "#" ] [ h1 [ avenir ] [ text "flora creative" ] ]
+        |> Navbar.brand [ href "" ] [ h1 [ avenir ] [ text "flora creative" ] ]
         |> Navbar.items
-            [ navigationItem "#flora-project" "flora project"
+            [ navigationItem "#flora" "flora project"
             , navigationItem "#about" "about"
             , navigationItem "#contact" "contact"
             ]
@@ -160,8 +214,8 @@ navigationItem itemLink itemTitle =
     Navbar.itemLink [ href itemLink ] [ h5 [ avenir ] [ text itemTitle ] ]
 
 
-errorView : Model -> Html Msg
-errorView model =
+errorView : Html Msg
+errorView =
     div
         [ style
             [ ( "background-color", "#edeae4" )
@@ -170,6 +224,18 @@ errorView model =
             ]
         ]
         [ h3 [ mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
+
+
+textViewWithText : String -> Html Msg
+textViewWithText copy =
+    div
+        [ style
+            [ ( "background-color", "#edeae4" )
+            , ( "padding-top", "15em" )
+            , ( "padding-bottom", "15em" )
+            ]
+        ]
+        [ h3 [ mainBodyTextStyle ] [ text copy ] ]
 
 
 loadingView : Model -> Html Msg
