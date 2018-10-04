@@ -1,47 +1,42 @@
 module FloraWeb exposing (Model, Msg(UrlChanged), init, subscriptions, update, view)
 
 import API exposing (..)
-import AppView
-import Dom.Scroll
-import Html exposing (..)
-import Html.Attributes exposing (href, src, style)
-import Http
-import Material
-import Material.Button as Button
-import Material.Color as Color
-import Material.Grid as Grid
-import Material.Layout as Layout
-import Material.Options as Options
-import Material.Scheme
-import Material.Spinner as Loading
-import Material.Typography as Typo
-import Navigation
-import Dom.Scroll
 import About
-import Contact
+import App
+import Array exposing (..)
+import Bootstrap.CDN as CDN
+import Bootstrap.Navbar as Navbar
+import Bootstrap.Progress as Progress
+import Html exposing (..)
+import Html.Attributes exposing (href, id, src, style)
+import Http
+import Navigation
+import Platform.Cmd
 
 
 -- Model
 
 
 type alias Model =
-    { mdl : Material.Model
-    , history : List Navigation.Location
-    , apps : List IOSApp
+    { history : List Navigation.Location
+    , apps : Array App.Model
     , hasFinishedLoading : Bool
-    , currentTab : Int
+    , navState : Navbar.State
     }
 
 
 init : Navigation.Location -> ( Model, Cmd Msg )
 init location =
-    ( { mdl = Material.model
-      , history = [ location ]
-      , apps = []
+    let
+        ( navState, navCmd ) =
+            Navbar.initialState NavMsg
+    in
+    ( { history = [ location ]
+      , apps = Array.empty
       , hasFinishedLoading = False
-      , currentTab = 0
+      , navState = navState
       }
-    , fetchAllApps
+    , Cmd.batch [ navCmd, fetchAllApps ]
     )
 
 
@@ -59,8 +54,8 @@ fetchAllApps =
 type Msg
     = UrlChanged Navigation.Location
     | ReceivedAllApps (Result Http.Error (List IOSApp))
-    | TabSelected Int
-    | Mdl (Material.Msg Msg)
+    | NavMsg Navbar.State
+    | AppMsg App.Msg App.Model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -69,6 +64,9 @@ update msg model =
         UrlChanged location ->
             ( { model | history = location :: model.history }, Cmd.none )
 
+        NavMsg state ->
+            ( { model | navState = state }, Cmd.none )
+
         ReceivedAllApps result ->
             case result of
                 Err error ->
@@ -76,14 +74,10 @@ update msg model =
                         ( { model | hasFinishedLoading = True }, Cmd.none )
 
                 Ok apps ->
-                    ( { model | apps = apps, hasFinishedLoading = True }, Cmd.none )
+                    ( { model | apps = List.indexedMap App.init apps |> Array.fromList, hasFinishedLoading = True }, Cmd.none )
 
-        -- this would do navigation etc.
-        TabSelected k ->
-            ( { model | currentTab = k }, Cmd.none )
-
-        Mdl msg_ ->
-            Material.update Mdl msg_ model
+        AppMsg appMsg appModel ->
+            ( { model | apps = Array.set appModel.index (App.update appMsg appModel) model.apps }, Cmd.none )
 
 
 
@@ -92,110 +86,69 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    [ Navbar.subscriptions model.navState NavMsg ]
+        ++ (Array.map appSubscription model.apps |> Array.toList)
+        |> Sub.batch
+
+
+appSubscription : App.Model -> Sub Msg
+appSubscription model =
+    App.subscriptions model |> Sub.map (flip AppMsg model)
 
 
 
 -- View
 
 
-type alias Mdl =
-    Material.Model
-
-
 mainContentview : Model -> Html Msg
 mainContentview model =
     case model.hasFinishedLoading of
         True ->
-            case List.isEmpty model.apps of
+            case Array.isEmpty model.apps of
                 True ->
-                    div [] [ errorView model, footerView ]
+                    div [] [ errorView model ]
 
                 False ->
-                    div [] [ floraAppView model, footerView ]
+                    div [] [ floraAppView model ]
 
         False ->
             loadingView model
 
 
-backgroundColor : Color.Color
-backgroundColor =
-    Color.color Color.BlueGrey Color.S50
-
-
 avenir : Html.Attribute msg
 avenir =
-    style [ ( "font-family", "\"Avenir\", Times" ) ]
+    style
+        [ ( "font-family", "\"Avenir\", Times" )
+        , ( "font-feature-settings", "\"liga\" 0" )
+        ]
 
 
 view : Model -> Html Msg
 view model =
-    Material.Scheme.topWithScheme Color.Grey Color.DeepPurple <|
-        Layout.render Mdl
-            model.mdl
-            [ Layout.fixedTabs
-            , Layout.fixedHeader
-            , Layout.onSelectTab TabSelected
-            , Layout.waterfall True
-            , Layout.transparentHeader
-            ]
-            { header =
-                [ h1
-                    [ style
-                        [ ( "background-color", "#2e3240" )
-                        , ( "color", "#d4d1cf" )
-                        , ( "text-align", "center" )
-                        , ( "letter-spacing", "7px" )
-                        ]
-                    , avenir
-                    ]
-                    [ text "flora creative" ]
-                ]
-            , drawer = []
-            , tabs =
-                ( [ "flora project", "about", "contact" ] |> List.map tabStyling
-                , [ avenir
-                        |> Options.attribute
-                  , style
-                        [ ( "background-color", "#2e3240" )
-                        , ( "color", "#edeae4" )
-                        , ( "text-decoration", "none" )
-                        , ( "letter-spacing", "2px" )
-                        , ( "font-feature-settings", "\"liga\" 0" )
-                        , ( "font-weight", "200" )
-                        ]
-                        |> Options.attribute
-                  ]
-                )
-            , main =
-                [ case model.currentTab of
-                    -- TODO not pretty
-                    -- apps
-                    1 ->
-                        About.view
-
-                    2 ->
-                        Contact.view
-
-                    _ ->
-                        mainContentview model
-
-                -- about us
-                ]
-            }
-
-
-tabStyling : String -> Html Msg
-tabStyling tabName =
-    Options.styled p
-        [ Typo.subhead
-        , Typo.center
-        , avenir |> Options.attribute
-        , style
-            [ ( "color", "#edeae4" ), ( "text-align", "center" ), ( "vertical-align", "middle" ) ]
-            |> Options.attribute
+    div []
+        [ CDN.stylesheet
+        , menu model
+        , mainContentview model
+        , footerView model
         ]
-        [ text tabName ]
+
+
+menu : Model -> Html Msg
+menu model =
+    Navbar.config NavMsg
+        |> Navbar.withAnimation
+        |> Navbar.brand [ href "#" ] [ h1 [ avenir ] [ text "flora creative" ] ]
+        |> Navbar.items
+            [ navigationItem "#flora-project" "flora project"
+            , navigationItem "#about" "about"
+            , navigationItem "#contact" "contact"
+            ]
+        |> Navbar.view model.navState
+
+
+navigationItem : String -> String -> Navbar.Item Msg
+navigationItem itemLink itemTitle =
+    Navbar.itemLink [ href itemLink ] [ h5 [ avenir ] [ text itemTitle ] ]
 
 
 errorView : Model -> Html Msg
@@ -207,7 +160,7 @@ errorView model =
             , ( "padding-bottom", "15em" )
             ]
         ]
-        [ mainCopyStyle "Something has gone wrong. We'll be back up soon." ]
+        [ h3 [ mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
 
 
 loadingView : Model -> Html Msg
@@ -218,27 +171,26 @@ loadingView model =
             , ( "padding", "15em" )
             ]
         ]
-        [ Loading.spinner
-            [ Loading.active True
-            , Loading.singleColor True
-            , Options.center
-            , style [ ( "margin", "auto" ) ] |> Options.attribute
+        [ Progress.progress
+            [ Progress.value 100
+            , Progress.animated
             ]
+        , h3 [ mainBodyTextStyle ] [ text "just a moment" ]
         ]
 
 
-footerView : Html Msg
-footerView =
-    Options.styled
-        p
-        [ Typo.subhead
-        , Typo.center
-        , avenir |> Options.attribute
-        , style
-            [ ( "color", "#edeae4" ), ( "text-align", "center" ), ( "vertical-align", "middle" ) ]
-            |> Options.attribute
+footerView : Model -> Html Msg
+footerView model =
+    let
+        footerText =
+            "Copyright Flora Creative " ++ currentYear ++ "."
+    in
+    div []
+        [ br [] []
+        , h6
+            [ avenir ]
+            [ text footerText ]
         ]
-        [ text ("Copyright Flora Creative " ++ currentYear ++ ".") ]
 
 
 
@@ -250,29 +202,19 @@ currentYear =
     "2018"
 
 
-contentView : Model -> Html Msg
-contentView model =
-    case List.head model.history of
-        Just location ->
-            case
-                model.apps
-                    |> List.filter (\app -> "#" ++ app.shortName == location.hash)
-                    |> List.head
-            of
-                Just app ->
-                    div [] [ text location.hash ]
-
-                Nothing ->
-                    div [] [ text location.hash ]
-
-        Nothing ->
-            div [] []
-
-
 floraAppView : Model -> Html Msg
 floraAppView model =
-    div []
-        (appIconNavigationView model :: List.map AppView.view model.apps)
+    let
+        projectOverview =
+            [ appIconNavigationView model ]
+
+        appContent =
+            model.apps |> Array.map appMsg |> Array.toList
+
+        appMsg =
+            \appModel -> App.view appModel |> Html.map (flip AppMsg appModel)
+    in
+    div [] (projectOverview ++ appContent)
 
 
 appIconNavigationView : Model -> Html Msg
@@ -286,109 +228,44 @@ appIconNavigationView model =
             ]
         ]
         [ floraProjectTitle model
-        , appIconViews model |> Grid.grid appIconGridStyle
         ]
 
 
 floraProjectTitle : Model -> Html Msg
 floraProjectTitle model =
     div []
-        [ Options.styled p
-            [ Typo.display3
-            , Typo.center
-            , style [ ( "padding", "1em" ), ( "letter-spacing", "4px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
-            ]
-            [ text "flora project" ]
-        , Options.styled p
-            [ Typo.display1
-            , Typo.center
-            , style [ ( "padding-bottom", "1em" ), ( "letter-spacing", "4px" ), ( "font-feature-settings", "\"liga\" 0" ) ] |> Options.attribute
-            ]
-            [ text "audio effects" ]
-        , floraProjectDescription
+        [ br [] []
+        , br [] []
+        , h1 [ avenir ] [ text "flora project" ]
+        , br [] []
+        , br [] []
+        , h2 [ avenir ] [ text "audio effects" ]
+        , br [] []
+        , br [] []
+        , h5 [ avenir, mainBodyTextStyle ] [ text floraProjectDescription ]
+        , br [] []
+        , br [] []
         ]
 
 
-mainCopyStyle : String -> Html Msg
-mainCopyStyle content =
-    Options.styled p
-        [ Typo.subhead
-        , Typo.center
-        , style
-            [ ( "padding", "1em" )
-            , ( "text-align", "center" )
-            , ( "letter-spacing", "1px" )
-            , ( "font-feature-settings", "\"liga\" 0" )
-            , ( "font-weight", "400" )
-            , ( "width", "70%" )
-            , ( "margin", "auto" )
-            ]
-            |> Options.attribute
+mainBodyTextStyle : Attribute msg
+mainBodyTextStyle =
+    style
+        [ ( "text-align", "center" )
+        , ( "letter-spacing", "1px" )
+        , ( "width", "70%" )
+        , ( "margin", "auto" )
         ]
-        [ text content ]
 
 
-floraProjectDescription : Html Msg
+floraProjectDescription : String
 floraProjectDescription =
-    mainCopyStyle """
+    """
     the flora project was conceived as a suite of beautifully simple, cpu-effective audio effects for ios devices, reminiscent of stomp-box style effects.
 
 
     a simple, consistent and intuitive interface is presented with just the right number of parameters to allow users to quickly dial in the perfect sound.
     """
-
-
-appIconGridStyle : List (Options.Style a)
-appIconGridStyle =
-    [ Options.center
-    , style
-        [ ( "width", "90%" )
-        , ( "background-color", "#edeae4" )
-        , ( "margin", "auto" )
-        ]
-        |> Options.attribute
-    ]
-
-
-appIconViews : Model -> List (Grid.Cell Msg)
-appIconViews model =
-    model.apps
-        |> List.map (\app -> ( app, model ))
-        |> List.map appIconView
-
-
-appIconView : ( IOSApp, Model ) -> Grid.Cell Msg
-appIconView ( app, model ) =
-    Grid.cell
-        [ Grid.size Grid.All 4
-        , Typo.center
-        , Typo.title
-        ]
-        [ appIconButton app model
-        ]
-
-
-appIconButton : IOSApp -> Model -> Html Msg
-appIconButton app model =
-    Button.render Mdl
-        [ 0 ]
-        model.mdl
-        [ Button.flat
-        , Button.link ("#" ++ app.shortName)
-        , style
-            [ ( "height", "18em" )
-            , ( "vertical-align", "middle" )
-            ]
-            |> Options.attribute
-        ]
-        [ img [ src app.appIcon, appIconStyle ] []
-        , br [] []
-        , div
-            [ avenir
-            , style [ ( "color", app.foregroundColor ) ]
-            ]
-            [ text app.appName ]
-        ]
 
 
 appIconStyle : Html.Attribute msg
