@@ -55,7 +55,7 @@ type Msg
     = UrlChanged Navigation.Location
     | ReceivedAllApps (Result Http.Error (List IOSApp))
     | NavMsg Navbar.State
-    | AppMsg App.Msg App.Model
+    | AppMsg App.Model App.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -76,7 +76,7 @@ update msg model =
                 Ok apps ->
                     ( { model | apps = List.indexedMap App.init apps |> Array.fromList, hasFinishedLoading = True }, Cmd.none )
 
-        AppMsg appMsg appModel ->
+        AppMsg appModel appMsg ->
             ( { model | apps = Array.set appModel.index (App.update appMsg appModel) model.apps }, Cmd.none )
 
 
@@ -86,22 +86,31 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
+    let
+        appSubscription =
+            \app -> Sub.map (AppMsg app) (App.subscriptions app)
+
+        allAppSubscriptions =
+            model.apps
+                |> Array.map appSubscription
+                |> Array.toList
+    in
     [ Navbar.subscriptions model.navState NavMsg ]
-        ++ (Array.map appSubscription model.apps |> Array.toList)
+        ++ allAppSubscriptions
         |> Sub.batch
-
-
-appSubscription : App.Model -> Sub Msg
-appSubscription model =
-    App.subscriptions model |> Sub.map (flip AppMsg model)
 
 
 
 -- View
 
 
-mainContentview : Model -> Html Msg
-mainContentview model =
+mainContentView : Model -> Html Msg
+mainContentView model =
+    floraProjectContentView model
+
+
+floraProjectContentView : Model -> Html Msg
+floraProjectContentView model =
     case model.hasFinishedLoading of
         True ->
             case Array.isEmpty model.apps of
@@ -128,7 +137,7 @@ view model =
     div []
         [ CDN.stylesheet
         , menu model
-        , mainContentview model
+        , mainContentView model
         , footerView model
         ]
 
@@ -212,7 +221,7 @@ floraAppView model =
             model.apps |> Array.map appMsg |> Array.toList
 
         appMsg =
-            \appModel -> App.view appModel |> Html.map (flip AppMsg appModel)
+            \appModel -> Html.map (AppMsg appModel) (App.view appModel)
     in
     div [] (projectOverview ++ appContent)
 
