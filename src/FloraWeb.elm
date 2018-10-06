@@ -1,23 +1,27 @@
-module FloraWeb exposing (Msg(UrlChanged), init, subscriptions, update, view)
+module FloraWeb exposing (Msg(..), init, subscriptions, update, view)
 
 import API exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (href, src)
 import Http
-import Navigation
+import Browser.Navigation as Nav
+import Browser
+import Url
 import Regex
 
 
 type alias Model =
-    { history : List Navigation.Location
+    { history : List Url.Url
+    , key : Nav.Key
     , apps : List IOSApp
     , hasFinishedLoading : Bool
     }
 
 
-init : Navigation.Location -> ( Model, Cmd Msg )
-init location =
-    ( { history = [ location ]
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init _ url key =
+    ( { history = [ url ]
+      , key = key
       , apps = []
       , hasFinishedLoading = False
       }
@@ -33,7 +37,8 @@ fetchAllApps =
 
 
 type Msg
-    = UrlChanged Navigation.Location
+    = UrlChanged Url.Url
+    | LinkClicked Browser.UrlRequest
     | ReceivedAllApps (Result Http.Error (List IOSApp))
 
 
@@ -43,10 +48,17 @@ update msg model =
         UrlChanged location ->
             ( { model | history = location :: model.history }, Cmd.none )
 
+        LinkClicked urlRequest ->
+          case urlRequest of
+            Browser.Internal url ->
+              (model, Nav.pushUrl model.key (Url.toString url))
+            Browser.External href ->
+              (model, Nav.load href)
+
         ReceivedAllApps result ->
             case result of
                 Err error ->
-                    Debug.log (toString error)
+                    Debug.log (Debug.toString error)
                         ( { model | hasFinishedLoading = True }, Cmd.none )
 
                 Ok apps ->
@@ -58,8 +70,11 @@ subscriptions model =
     Sub.none
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
+  Browser.Document
+    "Flora Creative"
+    [
     case model.hasFinishedLoading of
         True ->
             case List.isEmpty model.apps of
@@ -71,6 +86,7 @@ view model =
 
         False ->
             loadingView model
+            ]
 
 
 errorView : Model -> Html Msg
@@ -85,8 +101,13 @@ loadingView model =
 
 footerView : Html Msg
 footerView =
-    div [ basicStyle ] [ text "Copyright Flora Creative." ]
+    div basicStyle [ text "Copyright Flora Creative." ]
 
+maybeToString : Maybe String -> String
+maybeToString mayb =
+  case mayb of
+    Just str -> str
+    Nothing -> ""
 
 contentView : Model -> Html Msg
 contentView model =
@@ -94,7 +115,7 @@ contentView model =
         Just location ->
             case
                 List.head
-                    (List.filter (\app -> "#" ++ app.shortName == location.hash)
+                    (List.filter (\app -> "#" ++ app.shortName == (maybeToString location.fragment))
                         model.apps
                     )
             of
@@ -102,7 +123,7 @@ contentView model =
                     singleAppView app
 
                 Nothing ->
-                    div [ basicStyle ] [ text "No content yet!" ]
+                    div basicStyle [ text "No content yet!" ]
 
         Nothing ->
             allAppView model.apps
@@ -111,14 +132,16 @@ contentView model =
 navBar : Model -> Html Msg
 navBar model =
     div []
-        [ h1 [ basicStyle ] [ text "Navigation" ]
-        , div [ basicStyle ] (List.map viewLink (List.map appToNameAndLink model.apps))
+        [ h1 basicStyle [ text "Navigation" ]
+        , div basicStyle (List.map viewLink (List.map appToNameAndLink model.apps))
         ]
 
+uncurry : (a -> b -> c) -> (a, b) -> c
+uncurry f = \(a, b) -> f a b
 
-basicStyle : Attribute Msg
+basicStyle : List (Attribute Msg)
 basicStyle =
-    Html.Attributes.style
+    List.map (uncurry Html.Attributes.style)
         [ ( "width", "100%" )
         , ( "font-size", "2em" )
         , ( "text-align", "center" )
@@ -137,7 +160,7 @@ allAppView iOSAppList =
 
 singleAppView : IOSApp -> Html Msg
 singleAppView iOSApp =
-    div [ basicStyle ]
+    div basicStyle
         [ text iOSApp.appName
         , text iOSApp.appDescription
         , button [] []
@@ -152,6 +175,6 @@ viewLink ( name, linkName ) =
     li [] [ a [ href ("#" ++ linkName) ] [ text name ] ]
 
 
-viewLocation : Navigation.Location -> Html msg
-viewLocation location =
-    li [] [ text (location.pathname ++ location.hash) ]
+-- viewLocation : Navigation.Location -> Html msg
+-- viewLocation location =
+--     li [] [ text (location.pathname ++ location.hash) ]

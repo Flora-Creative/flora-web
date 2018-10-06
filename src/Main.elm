@@ -1,13 +1,15 @@
-module Main exposing (..)
+module Main exposing (main)
 
 import FloraWeb exposing (..)
-import Navigation
+import Browser
 
 
 main =
-    Navigation.program UrlChanged
+    Browser.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }

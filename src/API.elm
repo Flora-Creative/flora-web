@@ -1,16 +1,17 @@
-module API exposing (..)
+module API exposing (IOSApp, decodeIOSApp, get, getByName)
 
+import Http
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (..)
 import Json.Encode
-import Http
 import String
+import Url
 
 
 type alias IOSApp =
     { appName : String
-    , images : List (String)
-    , videoLinks : List (String)
+    , images : List String
+    , videoLinks : List String
     , itunesUrl : String
     , appDescription : String
     , backgroundColor : String
@@ -20,9 +21,10 @@ type alias IOSApp =
     , shortName : String
     }
 
+
 decodeIOSApp : Decoder IOSApp
 decodeIOSApp =
-    decode IOSApp
+    succeed IOSApp
         |> required "appName" string
         |> required "images" (list string)
         |> required "videoLinks" (list string)
@@ -34,7 +36,8 @@ decodeIOSApp =
         |> required "appIcon" string
         |> required "shortName" string
 
-get : String -> Http.Request (List (IOSApp))
+
+get : String -> Http.Request (List IOSApp)
 get urlBase =
     Http.request
         { method =
@@ -55,7 +58,8 @@ get urlBase =
             False
         }
 
-getByName : String -> String -> Http.Request (IOSApp)
+
+getByName : String -> String -> Http.Request IOSApp
 getByName urlBase capture_name =
     Http.request
         { method =
@@ -65,7 +69,7 @@ getByName urlBase capture_name =
         , url =
             String.join "/"
                 [ urlBase
-                , capture_name |> Http.encodeUri
+                , Url.percentEncode capture_name
                 ]
         , body =
             Http.emptyBody
