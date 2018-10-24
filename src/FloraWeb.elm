@@ -44,7 +44,7 @@ fetchAllApps : Cmd Msg
 fetchAllApps =
     Http.send
         ReceivedAllApps
-        (API.get "http://localhost:1234")
+        (API.get "https://flora-api.herokuapp.com/")
 
 
 
@@ -199,6 +199,7 @@ view model =
 menu : Model -> Html Msg
 menu model =
     Navbar.config NavMsg
+        |> Navbar.attrs [ style [ ( "background-color", "#2e323f" ) ] ]
         |> Navbar.withAnimation
         |> Navbar.brand [ href "" ] [ h1 [ avenir ] [ text "flora creative" ] ]
         |> Navbar.items
@@ -223,7 +224,7 @@ errorView =
             , ( "padding-bottom", "15em" )
             ]
         ]
-        [ h3 [ mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
+        [ h3 [ avenir, mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
 
 
 textViewWithText : String -> Html Msg
@@ -233,9 +234,10 @@ textViewWithText copy =
             [ ( "background-color", "#edeae4" )
             , ( "padding-top", "15em" )
             , ( "padding-bottom", "15em" )
+            , ( "color", "#2e323f" )
             ]
         ]
-        [ h3 [ mainBodyTextStyle ] [ text copy ] ]
+        [ h4 [ avenir, mainBodyTextStyle ] [ text copy ] ]
 
 
 loadingView : Model -> Html Msg
@@ -250,7 +252,7 @@ loadingView model =
             [ Progress.value 100
             , Progress.animated
             ]
-        , h3 [ mainBodyTextStyle ] [ text "just a moment" ]
+        , h3 [ avenir, mainBodyTextStyle ] [ text "just a moment" ]
         ]
 
 
@@ -327,9 +329,9 @@ mainBodyTextStyle : Attribute msg
 mainBodyTextStyle =
     style
         [ ( "text-align", "center" )
-        , ( "letter-spacing", "1px" )
         , ( "width", "70%" )
         , ( "margin", "auto" )
+        , ( "color", "#605b74" )
         ]
 
 
