@@ -7,8 +7,10 @@ import Bootstrap.Carousel as Carousel
 import Bootstrap.Carousel.Slide as Slide
 import Bootstrap.Text as Text
 import Bootstrap.Utilities.Border as Border
+import Bootstrap.Utilities.Size as Size
 import Html exposing (..)
 import Html.Attributes exposing (href, id, src, style)
+import StyleSheet
 
 
 type alias Model =
@@ -98,13 +100,11 @@ cardView model =
             ]
         ]
         |> Card.block []
-            [ Block.titleH1 [ textPadding ] [ text app.appName ]
+            [ Block.titleH1 [ textPadding, StyleSheet.avenir, StyleSheet.semibold ] [ text app.appName ]
             , Block.custom <| carousel model
-            , Block.titleH5 [ textPadding, style [ ( "paddingBottom", "0em" ) ] ] [ text app.appDescription ]
+            , Block.titleH5 [ textPadding, StyleSheet.avenir, StyleSheet.regular, style [ ( "paddingBottom", "0em" ) ] ] [ text app.appDescription ]
+            , Block.link [ style [ ( "float", "center" ) ] ] <| [ appStoreIcon app.itunesUrl ]
             ]
-        |> Card.block
-            [ Block.align Text.alignXsCenter ]
-            [ Block.link [] <| [ appStoreIcon app.itunesUrl ] ]
         |> Card.view
 
 
@@ -112,22 +112,18 @@ appStoreIcon : String -> Html msg
 appStoreIcon url =
     a
         [ href url
-        , style
-            [ ( "float", "center" ) ]
+        , style [ ( "float", "center" ) ]
         , textPadding
         ]
-        [ img
-            [ src (cloudinaryURL ++ "assets/app_store.png")
-            ]
-            []
+        [ img [ src (cloudinaryURL ++ "assets/app_store.png"), Html.Attributes.width 240 ] []
         ]
 
 
 textPadding : Attribute msg
 textPadding =
     style
-        [ ( "paddingTop", "1em" )
-        , ( "paddingBottom", "1em" )
+        [ ( "paddingTop", "0em" )
+        , ( "paddingBottom", "0em" )
         , ( "paddingLeft", "1em" )
         , ( "paddingRight", "1em" )
         ]
@@ -149,8 +145,6 @@ carousel model =
 
         slides =
             List.map videoToSlide model.app.videoLinks ++ makeImages model.app.shortName
-
-        -- List.map videoToSlide model.app.videoLinks ++ List.map imageToSlide model.app.images
     in
     Carousel.config CarouselMsg [ carouselPadding ]
         |> Carousel.slides slides
@@ -169,7 +163,7 @@ makeImages appShortname =
             \s -> cloudinaryURL ++ "apps/" ++ appShortname ++ s
 
         imageToSlide =
-            \url -> Slide.config [] (Slide.image [] url)
+            \url -> Slide.config [ Size.h100, Size.w100 ] (Slide.image [] url)
     in
     [ "/0.png"
     , "/1.png"
@@ -200,9 +194,7 @@ embedWrapperStyle =
     style
         [ ( "overflow", "hidden" )
         , ( "position", "relative" )
-
-        -- , ( "height", "0" )
-        , ( "paddingBottom", "56.25%" )
+        , ( "paddingBottom", "75%" )
         ]
 
 

@@ -7,11 +7,14 @@ import Array exposing (..)
 import Bootstrap.CDN as CDN
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Progress as Progress
+import Contact as Contact
 import Html exposing (..)
 import Html.Attributes exposing (href, id, src, style)
 import Http
 import Navigation
 import Platform.Cmd
+import Privacy exposing (..)
+import StyleSheet
 
 
 -- Model
@@ -105,6 +108,7 @@ type Page
     | IndividualApp App.Model
     | About
     | Contact
+    | Privacy
     | Unknown
 
 
@@ -133,6 +137,9 @@ currentPage model =
         "#contact" ->
             Contact
 
+        "#privacy" ->
+            Privacy
+
         _ ->
             -- Either a hash for an individual app or an unkown hash
             appFromHash
@@ -157,10 +164,23 @@ mainContentView model =
             floraProjectContentView model
 
         About ->
-            div [] [ textViewWithText About.floraCreativeCopy ]
+            About.view
+
+        Privacy ->
+            privacyPolicy
+                [ StyleSheet.avenir
+                , StyleSheet.regular
+                , style
+                    [ ( "background-color", "#edeae4" )
+                    , ( "padding", "2em" )
+                    , ( "width", "85%" )
+                    , ( "margin", "auto" )
+                    , ( "color", "#2e323f" )
+                    ]
+                ]
 
         Contact ->
-            div [] [ textViewWithText "Contact us coming soon." ]
+            Contact.view
 
 
 floraProjectContentView : Model -> Html Msg
@@ -178,14 +198,6 @@ floraProjectContentView model =
             loadingView model
 
 
-avenir : Html.Attribute msg
-avenir =
-    style
-        [ ( "font-family", "\"Avenir\", Times" )
-        , ( "font-feature-settings", "\"liga\" 0" )
-        ]
-
-
 view : Model -> Html Msg
 view model =
     div []
@@ -201,18 +213,19 @@ menu model =
     Navbar.config NavMsg
         |> Navbar.attrs [ style [ ( "background-color", "#2e323f" ) ] ]
         |> Navbar.withAnimation
-        |> Navbar.brand [ href "" ] [ h1 [ avenir ] [ text "flora creative" ] ]
+        |> Navbar.brand [ href "" ] [ h1 [ StyleSheet.avenir ] [ text "flora creative" ] ]
         |> Navbar.items
             [ navigationItem "#flora" "flora project"
             , navigationItem "#about" "about"
             , navigationItem "#contact" "contact"
+            , navigationItem "#privacy" "privacy policy"
             ]
         |> Navbar.view model.navState
 
 
 navigationItem : String -> String -> Navbar.Item Msg
 navigationItem itemLink itemTitle =
-    Navbar.itemLink [ href itemLink ] [ h5 [ avenir ] [ text itemTitle ] ]
+    Navbar.itemLink [ href itemLink ] [ h5 [ StyleSheet.avenir, StyleSheet.regular ] [ text itemTitle ] ]
 
 
 errorView : Html Msg
@@ -224,20 +237,7 @@ errorView =
             , ( "padding-bottom", "15em" )
             ]
         ]
-        [ h3 [ avenir, mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
-
-
-textViewWithText : String -> Html Msg
-textViewWithText copy =
-    div
-        [ style
-            [ ( "background-color", "#edeae4" )
-            , ( "padding-top", "15em" )
-            , ( "padding-bottom", "15em" )
-            , ( "color", "#2e323f" )
-            ]
-        ]
-        [ h4 [ avenir, mainBodyTextStyle ] [ text copy ] ]
+        [ h3 [ StyleSheet.avenir, mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
 
 
 loadingView : Model -> Html Msg
@@ -252,7 +252,7 @@ loadingView model =
             [ Progress.value 100
             , Progress.animated
             ]
-        , h3 [ avenir, mainBodyTextStyle ] [ text "just a moment" ]
+        , h3 [ StyleSheet.avenir, mainBodyTextStyle ] [ text "just a moment" ]
         ]
 
 
@@ -265,7 +265,7 @@ footerView model =
     div []
         [ br [] []
         , h6
-            [ avenir ]
+            [ StyleSheet.avenir ]
             [ text footerText ]
         ]
 
@@ -276,7 +276,7 @@ footerView model =
 
 currentYear : String
 currentYear =
-    "2018"
+    "2019"
 
 
 floraAppView : Model -> Html Msg
@@ -313,13 +313,13 @@ floraProjectTitle model =
     div []
         [ br [] []
         , br [] []
-        , h1 [ avenir ] [ text "flora project" ]
+        , h1 [ StyleSheet.avenir, StyleSheet.semibold ] [ text "flora project" ]
         , br [] []
         , br [] []
-        , h2 [ avenir ] [ text "audio effects" ]
+        , h2 [ StyleSheet.avenir ] [ text "audio effects" ]
         , br [] []
         , br [] []
-        , h5 [ avenir, mainBodyTextStyle ] [ text floraProjectDescription ]
+        , h5 [ StyleSheet.avenir, StyleSheet.regular, style [ ( "width", "85%" ), ( "text-align", "center" ), ( "margin", "auto" ) ] ] [ text floraProjectDescription ]
         , br [] []
         , br [] []
         ]
