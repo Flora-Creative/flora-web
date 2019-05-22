@@ -7,20 +7,11 @@ import StyleSheet
 
 view : Html msg
 view =
-    div []
-        [ div
-            [ StyleSheet.avenir
-            , StyleSheet.regular
-            , style
-                [ ( "background-color", "#edeae4" )
-                , ( "color", "#2e323f" )
-                , ( "text-align", "center" )
-                , ( "width", "70%" )
-                , ( "margin", "auto" )
-                , ( "color", "#605b74" )
-                ]
-            ]
-            [ text floraCreativeCopy ]
+    div
+        (style [ ( "text-align", "center" ) ] :: StyleSheet.embeddedContentStyle)
+        [ StyleSheet.separatorWithColor StyleSheet.blueGray
+        , text floraCreativeCopy
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         ]
 
 

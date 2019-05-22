@@ -6,7 +6,6 @@ import Bootstrap.Card.Block as Block
 import Bootstrap.Carousel as Carousel
 import Bootstrap.Carousel.Slide as Slide
 import Bootstrap.Text as Text
-import Bootstrap.Utilities.Border as Border
 import Bootstrap.Utilities.Size as Size
 import Html exposing (..)
 import Html.Attributes exposing (href, id, src, style)
@@ -79,61 +78,67 @@ cardView model =
 
                 _ ->
                     Card.align Text.alignXsLeft
+
+        separator =
+            div
+                [ defaultPadding ]
+                [ StyleSheet.separatorWithColor app.foregroundColor ]
     in
     Card.config
         [ alignment
         , Card.attrs
             [ style
                 [ ( "width", "85%" )
+                , ( "max-width", "750px" )
+                , ( "box-shadow", "0px 2px 5px 3px #222222" )
                 , ( "margin", "auto" )
                 , ( "border-width", "0px" )
                 , ( "-webkit-border-radius", "10px" )
                 , ( "-moz-border-radius", "10px" )
                 , ( "border-radius", "10px" )
+                , ( "letter-spacing", "0.07em" )
                 , ( "backgroundColor", "#" ++ app.backgroundColor )
                 , ( "color", app.foregroundColor )
-
-                -- , ( "paddingTop", "3em" )
-                -- , ( "paddingBottom", "3em" )
                 ]
             , id app.shortName
             ]
         ]
         |> Card.block []
-            [ Block.titleH1 [ textPadding, StyleSheet.avenir, StyleSheet.semibold ] [ text app.appName ]
+            [ Block.custom <| h1 [ defaultPadding, StyleSheet.avenir, StyleSheet.semibold ] [ text app.appName ]
+            , Block.custom <| separator
             , Block.custom <| carousel model
-            , Block.titleH5 [ textPadding, StyleSheet.avenir, StyleSheet.regular, style [ ( "paddingBottom", "0em" ) ] ] [ text app.appDescription ]
-            , Block.link [ style [ ( "float", "center" ) ] ] <| [ appStoreIcon app.itunesUrl ]
+            , Block.custom <| separator
+            , Block.titleH5 [ defaultPadding, StyleSheet.avenir, StyleSheet.regular ] [ text app.appDescription ]
+            , Block.custom <| separator
+            , Block.custom <| appStoreIcon app.itunesUrl
             ]
         |> Card.view
 
 
 appStoreIcon : String -> Html msg
 appStoreIcon url =
-    a
-        [ href url
-        , style [ ( "float", "center" ) ]
-        , textPadding
-        ]
-        [ img [ src (cloudinaryURL ++ "assets/app_store.png"), Html.Attributes.width 240 ] []
+    a [ href url ]
+        [ img
+            [ src (cloudinaryURL ++ "assets/app_store.png")
+            , style
+                [ ( "float", "center" )
+                , ( "display", "block" )
+                , ( "margin-left", "auto" )
+                , ( "margin-right", "auto" )
+                , ( "width", "10em" )
+                ]
+            ]
+            []
         ]
 
 
-textPadding : Attribute msg
-textPadding =
+defaultPadding : Attribute msg
+defaultPadding =
     style
         [ ( "paddingTop", "0em" )
         , ( "paddingBottom", "0em" )
-        , ( "paddingLeft", "1em" )
-        , ( "paddingRight", "1em" )
-        ]
-
-
-carouselPadding : Attribute msg
-carouselPadding =
-    style
-        [ ( "paddingLeft", "1em" )
-        , ( "paddingRight", "1em" )
+        , ( "paddingLeft", "16px" )
+        , ( "paddingRight", "16px" )
         ]
 
 
@@ -146,7 +151,7 @@ carousel model =
         slides =
             List.map videoToSlide model.app.videoLinks ++ makeImages model.app.shortName
     in
-    Carousel.config CarouselMsg [ carouselPadding ]
+    Carousel.config CarouselMsg [ defaultPadding ]
         |> Carousel.slides slides
         |> Carousel.view model.carouselState
 
@@ -174,32 +179,25 @@ makeImages appShortname =
 
 videoToSlide : String -> Slide.Config msg
 videoToSlide url =
-    url |> embedVideo |> Slide.customContent |> Slide.config []
+    let
+        wrapperStyle =
+            style
+                [ ( "overflow", "hidden" )
+                , ( "position", "relative" )
+                , ( "paddingBottom", "75%" )
+                ]
 
+        iframeStyle =
+            style
+                [ ( "top", "0" )
+                , ( "left", "0" )
+                , ( "border", "0" )
+                , ( "height", "100%" )
+                , ( "width", "100%" )
+                , ( "position", "absolute" )
+                ]
 
-embedIframeStyle : Html.Attribute msg
-embedIframeStyle =
-    style
-        [ ( "top", "0" )
-        , ( "left", "0" )
-        , ( "border", "0" )
-        , ( "height", "100%" )
-        , ( "width", "100%" )
-        , ( "position", "absolute" )
-        ]
-
-
-embedWrapperStyle : Html.Attribute msg
-embedWrapperStyle =
-    style
-        [ ( "overflow", "hidden" )
-        , ( "position", "relative" )
-        , ( "paddingBottom", "75%" )
-        ]
-
-
-{-| Embed a vimeo video in a responsive wrapper
--}
-embedVideo : String -> Html msg
-embedVideo url =
-    div [ embedWrapperStyle ] [ iframe [ src url, embedIframeStyle ] [] ]
+        embedVideo =
+            div [ wrapperStyle ] [ iframe [ src url, iframeStyle ] [] ]
+    in
+    Slide.config [] <| Slide.customContent embedVideo

@@ -8,6 +8,7 @@ import Bootstrap.CDN as CDN
 import Bootstrap.Navbar as Navbar
 import Bootstrap.Progress as Progress
 import Contact as Contact
+import Date exposing (Date)
 import Html exposing (..)
 import Html.Attributes exposing (href, id, src, style)
 import Http
@@ -15,6 +16,7 @@ import Navigation
 import Platform.Cmd
 import Privacy exposing (..)
 import StyleSheet
+import Task
 
 
 -- Model
@@ -25,6 +27,8 @@ type alias Model =
     , apps : Array App.Model
     , hasFinishedLoading : Bool
     , navState : Navbar.State
+    , contactModel : Contact.Model
+    , date : Maybe Date
     }
 
 
@@ -38,8 +42,10 @@ init location =
       , apps = Array.empty
       , hasFinishedLoading = False
       , navState = navState
+      , contactModel = Contact.init
+      , date = Nothing
       }
-    , Cmd.batch [ navCmd, fetchAllApps ]
+    , Cmd.batch [ navCmd, fetchAllApps, now ]
     )
 
 
@@ -59,6 +65,8 @@ type Msg
     | ReceivedAllApps (Result Http.Error (List IOSApp))
     | NavMsg Navbar.State
     | AppMsg App.Model App.Msg
+    | ContactFormUpdated Contact.Msg
+    | SetDate (Maybe Date)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -81,6 +89,16 @@ update msg model =
 
         AppMsg appModel appMsg ->
             ( { model | apps = Array.set appModel.index (App.update appMsg appModel) model.apps }, Cmd.none )
+
+        ContactFormUpdated formMsg ->
+            let
+                ( updated, _ ) =
+                    Contact.update formMsg model.contactModel
+            in
+            ( { model | contactModel = updated }, Cmd.none )
+
+        SetDate date ->
+            ( { model | date = date }, Cmd.none )
 
 
 
@@ -155,7 +173,7 @@ mainContentView : Model -> Html Msg
 mainContentView model =
     case currentPage model of
         Unknown ->
-            div [] [ errorView ]
+            errorView
 
         FloraApp ->
             floraProjectContentView model
@@ -167,20 +185,10 @@ mainContentView model =
             About.view
 
         Privacy ->
-            privacyPolicy
-                [ StyleSheet.avenir
-                , StyleSheet.regular
-                , style
-                    [ ( "background-color", "#edeae4" )
-                    , ( "padding", "2em" )
-                    , ( "width", "85%" )
-                    , ( "margin", "auto" )
-                    , ( "color", "#2e323f" )
-                    ]
-                ]
+            Privacy.view
 
         Contact ->
-            Contact.view
+            Contact.view model.contactModel
 
 
 floraProjectContentView : Model -> Html Msg
@@ -189,7 +197,7 @@ floraProjectContentView model =
         True ->
             case Array.isEmpty model.apps of
                 True ->
-                    div [] [ errorView ]
+                    errorView
 
                 False ->
                     div [] [ floraAppView model ]
@@ -210,15 +218,27 @@ view model =
 
 menu : Model -> Html Msg
 menu model =
+    let
+        logoStyle =
+            [ h1
+                [ StyleSheet.avenir
+                , StyleSheet.semibold
+                , style [ ( "color", StyleSheet.blueGray ), ( "text-color", StyleSheet.blueGray ) ]
+                ]
+                [ text "flora creative" ]
+            ]
+    in
     Navbar.config NavMsg
-        |> Navbar.attrs [ style [ ( "background-color", "#2e323f" ) ] ]
+        |> Navbar.attrs StyleSheet.navBarStyle
         |> Navbar.withAnimation
-        |> Navbar.brand [ href "" ] [ h1 [ StyleSheet.avenir ] [ text "flora creative" ] ]
+        |> Navbar.lightCustomClass StyleSheet.mutedMustard
+        |> Navbar.collapseMedium
+        |> Navbar.brand [ href "" ] logoStyle
         |> Navbar.items
             [ navigationItem "#flora" "flora project"
             , navigationItem "#about" "about"
             , navigationItem "#contact" "contact"
-            , navigationItem "#privacy" "privacy policy"
+            , navigationItem "#privacy" "privacy"
             ]
         |> Navbar.view model.navState
 
@@ -231,23 +251,14 @@ navigationItem itemLink itemTitle =
 errorView : Html Msg
 errorView =
     div
-        [ style
-            [ ( "background-color", "#edeae4" )
-            , ( "padding-top", "15em" )
-            , ( "padding-bottom", "15em" )
-            ]
-        ]
+        StyleSheet.embeddedContentStyle
         [ h3 [ StyleSheet.avenir, mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
 
 
 loadingView : Model -> Html Msg
 loadingView model =
     div
-        [ style
-            [ ( "background-color", "#edeae4" )
-            , ( "padding", "15em" )
-            ]
-        ]
+        (style [ ( "padding", "5em" ) ] :: StyleSheet.embeddedContentStyle)
         [ Progress.progress
             [ Progress.value 100
             , Progress.animated
@@ -259,13 +270,16 @@ loadingView model =
 footerView : Model -> Html Msg
 footerView model =
     let
+        currentYear =
+            Maybe.map (Date.year >> toString) model.date
+
         footerText =
-            "Copyright Flora Creative " ++ currentYear ++ "."
+            "Copyright Flora Creative " ++ Maybe.withDefault "2019" currentYear ++ "."
     in
     div []
         [ br [] []
         , h6
-            [ StyleSheet.avenir ]
+            [ StyleSheet.avenir, StyleSheet.regular, style [ ( "color", StyleSheet.mutedMustard ), ( "text-align", "center" ), ( "margin-bottom", "2em" ) ] ]
             [ text footerText ]
         ]
 
@@ -274,16 +288,16 @@ footerView model =
 -- TODO -- make this a task with `Date` from Core
 
 
-currentYear : String
-currentYear =
-    "2019"
+now : Cmd Msg
+now =
+    Task.perform (Just >> SetDate) Date.now
 
 
 floraAppView : Model -> Html Msg
 floraAppView model =
     let
         projectOverview =
-            [ appIconNavigationView model ]
+            [ floraProjectDescriptionView model ]
 
         appContent =
             model.apps |> Array.map appMsg |> Array.toList
@@ -294,35 +308,27 @@ floraAppView model =
     div [] (projectOverview ++ appContent)
 
 
-appIconNavigationView : Model -> Html Msg
-appIconNavigationView model =
-    div
-        [ style
-            [ ( "width", "100%" )
-            , ( "background-color", "#edeae4" )
-            , ( "text-align", "center" )
-            , ( "color", "#605b74" )
-            ]
-        ]
-        [ floraProjectTitle model
-        ]
+floraProjectDescriptionView : Model -> Html Msg
+floraProjectDescriptionView model =
+    let
+        descriptionStyle =
+            style
+                [ ( "text-align", "center" )
+                , ( "color", StyleSheet.blueGray )
+                ]
+                :: StyleSheet.embeddedContentStyle
+    in
+    div descriptionStyle (floraProjectTitle model)
 
 
-floraProjectTitle : Model -> Html Msg
+floraProjectTitle : Model -> List (Html Msg)
 floraProjectTitle model =
-    div []
-        [ br [] []
-        , br [] []
-        , h1 [ StyleSheet.avenir, StyleSheet.semibold ] [ text "flora project" ]
-        , br [] []
-        , br [] []
-        , h2 [ StyleSheet.avenir ] [ text "audio effects" ]
-        , br [] []
-        , br [] []
-        , h5 [ StyleSheet.avenir, StyleSheet.regular, style [ ( "width", "85%" ), ( "text-align", "center" ), ( "margin", "auto" ) ] ] [ text floraProjectDescription ]
-        , br [] []
-        , br [] []
-        ]
+    [ h1 [ StyleSheet.avenir, StyleSheet.semibold ] [ text "flora project" ]
+    , h3 [ StyleSheet.avenir ] [ text "audio effects" ]
+    , StyleSheet.separatorWithColor StyleSheet.blueGray
+    , h6 [ StyleSheet.avenir, StyleSheet.regular, style [ ( "text-align", "center" ) ] ] [ text floraProjectDescription ]
+    , StyleSheet.separatorWithColor StyleSheet.blueGray
+    ]
 
 
 mainBodyTextStyle : Attribute msg
@@ -331,7 +337,7 @@ mainBodyTextStyle =
         [ ( "text-align", "center" )
         , ( "width", "70%" )
         , ( "margin", "auto" )
-        , ( "color", "#605b74" )
+        , ( "color", StyleSheet.blueGray )
         ]
 
 

@@ -1,29 +1,35 @@
-module Privacy exposing (privacyPolicy)
+module Privacy exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, style)
 import StyleSheet
 
 
-privacyPolicy : List (Html.Attribute msg) -> Html msg
-privacyPolicy attributes =
-    div attributes
-        [ h1 [ StyleSheet.semibold ] [ text "Privacy Policy" ]
+view : Html msg
+view =
+    let
+        myStyle =
+            style [ ( "letter-spacing", "normal" ) ] :: StyleSheet.embeddedContentStyle
+    in
+    div myStyle
+        [ StyleSheet.separatorWithColor StyleSheet.blueGray
+        , h1 [ StyleSheet.semibold ] [ text "Privacy Policy" ]
         , p [] [ text "Effective date: December 12, 2018" ]
-        , p [] [ text "Flora Creative Limited (\" us \", \" we \", or \" our \") operates the http://flora-creative.com website and the Flora Project mobile applications (the \" Service \")." ]
+        , p [] [ text "Flora Creative Limited (\"us\", \"we\", or \"our\") operates the http://flora-creative.com website and the Flora Project mobile applications (the \"Service\")." ]
         , p [] [ text "This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data." ]
         , p [] [ text "We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions." ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Information Collection And Use" ]
         , p [] [ text "We collect several different types of information for various purposes to provide and improve our Service to you." ]
         , h3 [ StyleSheet.semibold ] [ text "Types of Data Collected" ]
         , h4 [ StyleSheet.semibold ] [ text "Personal Data" ]
-        , p [] [ text "While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (\" Personal Data \"). Personally identifiable information may include, but is not limited to:" ]
+        , p [] [ text "While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (\"Personal Data\"). Personally identifiable information may include, but is not limited to:" ]
         , ul []
             [ li [] [ text "Email address" ]
             , li [] [ text "Cookies and Usage Data" ]
             ]
         , h4 [ StyleSheet.semibold ] [ text "Usage Data" ]
-        , p [] [ text "We may also collect information that your browser sends whenever you visit our Service or when you access the Service by or through a mobile device (\" Usage Data \")." ]
+        , p [] [ text "We may also collect information that your browser sends whenever you visit our Service or when you access the Service by or through a mobile device (\"Usage Data\")." ]
         , p [] [ text "This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data." ]
         , p [] [ text "When you access the Service by or through a mobile device, this Usage Data may include information such as the type of mobile device you use, your mobile device unique ID, the IP address of your mobile device, your mobile operating system, the type of mobile Internet browser you use, unique device identifiers and other diagnostic data." ]
         , h4 [ StyleSheet.semibold ] [ text "Tracking & Cookies Data" ]
@@ -36,6 +42,7 @@ privacyPolicy attributes =
             , li [] [ text "Preference Cookies - We use Preference Cookies to remember your preferences and various settings." ]
             , li [] [ text "Security Cookies - We use Security Cookies for security purposes." ]
             ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Use of Data" ]
         , p [] [ text "Flora Creative Limited uses the collected data for various purposes:" ]
         , ul []
@@ -47,6 +54,7 @@ privacyPolicy attributes =
             , li [] [ text "To monitor the usage of the Service" ]
             , li [] [ text "To detect, prevent and address technical issues" ]
             ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Transfer Of Data" ]
         , p [] [ text "Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction." ]
         , p [] [ text "If you are located outside New Zealand and choose to provide information to us, please note that we transfer the data, including Personal Data, to New Zealand and process it there." ]
@@ -62,10 +70,12 @@ privacyPolicy attributes =
             , li [] [ text "To protect the personal safety of users of the Service or the public" ]
             , li [] [ text "To protect against legal liability" ]
             ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Security Of Data" ]
         , p [] [ text "The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security." ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Service Providers" ]
-        , p [] [ text "We may employ third party companies and individuals to facilitate our Service (\" Service Providers \"), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used." ]
+        , p [] [ text "We may employ third party companies and individuals to facilitate our Service (\"Service Providers\"), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used." ]
         , p [] [ text "These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose." ]
         , h3 [ StyleSheet.semibold ] [ text "Analytics" ]
         , p [] [ text "We may use third-party Service Providers to monitor and analyze the use of our Service." ]
@@ -77,16 +87,20 @@ privacyPolicy attributes =
                 , a [ href "https://policies.google.com/privacy?hl=en" ] [ text "https://policies.google.com/privacy?hl=en" ]
                 ]
             ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Links To Other Sites" ]
         , p [] [ text "Our Service may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit." ]
         , p [] [ text "We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services." ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Children's Privacy" ]
         , p [] [ text "Our Service does not address anyone under the age of 18 (\"Children\")." ]
         , p [] [ text "We do not knowingly collect personally identifiable information from anyone under the age of 18. If you are a parent or guardian and you are aware that your Children has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers." ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Changes To This Privacy Policy" ]
         , p [] [ text "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page." ]
-        , p [] [ text "We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the \" effective date \" at the top of this Privacy Policy." ]
+        , p [] [ text "We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the \"effective date\" at the top of this Privacy Policy." ]
         , p [] [ text "You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page." ]
+        , StyleSheet.separatorWithColor StyleSheet.blueGray
         , h2 [ StyleSheet.semibold ] [ text "Contact Us" ]
         , p [] [ text "If you have any questions about this Privacy Policy, please contact us:" ]
         , ul [] [ li [] [ text "By email: support@flora-creative.com" ] ]
