@@ -6,5 +6,9 @@ elm-stuff
 repl-temp-*
 flora-web.js
 
+
 ### Node ###
 node_modules/
+
+### Mac OS ###
+.DS_Store
