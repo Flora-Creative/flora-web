@@ -1,5 +1,6 @@
 module Contact exposing (Model, Msg, init, update, view)
 
+import Bootstrap.Alert as Alert
 import Bootstrap.Button as Button
 import Bootstrap.Form as Form
 import Bootstrap.Form.Checkbox as Checkbox
@@ -15,34 +16,46 @@ import Regex exposing (Regex)
 import StyleSheet
 
 
-event s =
-    Html.Events.onInput SetName
-
-
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
-    div StyleSheet.embeddedContentStyle [ form model ]
+    div StyleSheet.embeddedContentStyle [ alert model, form model ]
 
 
-form : Model -> Html msg
-form model =
-    Form.form []
-        [ h4 [ style [ ( "text-align", "center" ) ] ] [ text "contact us" ]
-        , h6 [ style [ ( "text-align", "center" ) ] ] [ text "we'd love to hear from you." ]
-        , br [] []
-        , Input.text [ Input.attrs [ placeholder "name" ] ]
-        , br [] []
-        , Input.email [ Input.attrs [ placeholder "email" ] ]
-        , br [] []
-        , submissionTypesRadioButtons
-        , br [] []
-        , Textarea.textarea
-            [ Textarea.id "message"
-            , Textarea.rows 5
+type alias Model =
+    { name : String
+    , nameIsValid : Bool
+    , email : String
+    , emailIsValid : Bool
+    , submissionType : FormSubmissionType
+    , bodyText : String
+    , bodyIsValid : Bool
+    , alertVisibility : Alert.Visibility
+    }
+
+
+init : Model
+init =
+    { name = ""
+    , nameIsValid = False
+    , email = ""
+    , emailIsValid = False
+    , submissionType = FeatureRequest
+    , bodyText = ""
+    , bodyIsValid = True
+    , alertVisibility = Alert.shown
+    }
+
+
+alert : Model -> Html Msg
+alert model =
+    Alert.config
+        |> Alert.info
+        |> Alert.dismissable AlertMsg
+        |> Alert.children
+            [ h6 [ style [ ( "text-align", "center" ) ] ] [ text "contact submission sent" ]
+            , p [ style [ ( "text-align", "center" ) ] ] [ text "thanks, we'll get back to you in a bit!" ]
             ]
-        , br [] []
-        , Button.button [ Button.outlinePrimary, Button.disabled (not (canSubmit model)) ] [ text "submit" ]
-        ]
+        |> Alert.view model.alertVisibility
 
 
 type Msg
@@ -51,6 +64,7 @@ type Msg
     | SetEmail String
     | SetBodyText String
     | SetFormSubmissionType FormSubmissionType
+    | AlertMsg Alert.Visibility
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -69,7 +83,33 @@ update msg model =
             ( { model | submissionType = submissionType }, Cmd.none )
 
         Submit ->
-            ( init, Cmd.none )
+            ( { init | alertVisibility = Alert.shown }, Cmd.none )
+
+        AlertMsg visibility ->
+            ( { model | alertVisibility = visibility }, Cmd.none )
+
+
+form : Model -> Html Msg
+form model =
+    Form.form []
+        [ h4 [ style [ ( "text-align", "center" ) ] ] [ text "contact us" ]
+        , h6 [ style [ ( "text-align", "center" ) ] ] [ text "we'd love to hear from you." ]
+        , br [] []
+        , Input.text [ Input.attrs [ placeholder "name" ], Input.onInput SetName, Input.value model.name ]
+        , br [] []
+        , Input.email [ Input.attrs [ placeholder "email" ], Input.onInput SetEmail, Input.value model.email ]
+        , br [] []
+        , submissionTypesRadioButtons model
+        , br [] []
+        , Textarea.textarea
+            [ Textarea.id "message"
+            , Textarea.rows 5
+            , Textarea.onInput SetBodyText
+            , Textarea.value model.bodyText
+            ]
+        , br [] []
+        , Button.button [ Button.outlinePrimary, Button.disabled (not (canSubmit model)), Button.onClick Submit ] [ text "submit" ]
+        ]
 
 
 validateName : String -> Bool
@@ -86,29 +126,6 @@ validateEmail email =
                 |> Regex.caseInsensitive
     in
     Regex.contains validEmail email
-
-
-type alias Model =
-    { name : String
-    , nameIsValid : Bool
-    , email : String
-    , emailIsValid : Bool
-    , submissionType : FormSubmissionType
-    , bodyText : String
-    , bodyIsValid : Bool
-    }
-
-
-init : Model
-init =
-    { name = ""
-    , nameIsValid = False
-    , email = ""
-    , emailIsValid = False
-    , submissionType = FeatureRequest
-    , bodyText = ""
-    , bodyIsValid = True
-    }
 
 
 canSubmit : Model -> Bool
@@ -176,11 +193,11 @@ identifierToSubmissionType string =
             Other
 
 
-submissionTypesRadioButtons : Html msg
-submissionTypesRadioButtons =
+submissionTypesRadioButtons : Model -> Html Msg
+submissionTypesRadioButtons model =
     let
         typeToRadio =
-            \s -> Radio.create [ Radio.id (submissionTypeIdentifier s) ] (submissionTypeIdentifier s)
+            \s -> Radio.create [ Radio.id (submissionTypeIdentifier s), Radio.onClick (SetFormSubmissionType s), Radio.checked (s == model.submissionType) ] (submissionTypeIdentifier s)
     in
     Fieldset.config
         |> Fieldset.asGroup

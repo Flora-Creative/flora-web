@@ -188,7 +188,7 @@ mainContentView model =
             Privacy.view
 
         Contact ->
-            Contact.view model.contactModel
+            Html.map ContactFormUpdated (Contact.view model.contactModel)
 
 
 floraProjectContentView : Model -> Html Msg
