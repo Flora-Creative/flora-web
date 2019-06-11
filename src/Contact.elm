@@ -42,7 +42,7 @@ init =
     , submissionType = FeatureRequest
     , bodyText = ""
     , bodyIsValid = True
-    , alertVisibility = Alert.shown
+    , alertVisibility = Alert.closed
     }
 
 
@@ -71,13 +71,13 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SetName name ->
-            ( { model | name = name, nameIsValid = validateName name }, Cmd.none )
+            ( { model | name = name, nameIsValid = characterCountIsGreaterThan 3 name }, Cmd.none )
 
         SetEmail email ->
             ( { model | email = email, emailIsValid = validateEmail email }, Cmd.none )
 
         SetBodyText body ->
-            ( { model | bodyText = body }, Cmd.none )
+            ( { model | bodyText = body, bodyIsValid = characterCountIsGreaterThan 8 body }, Cmd.none )
 
         SetFormSubmissionType submissionType ->
             ( { model | submissionType = submissionType }, Cmd.none )
@@ -112,9 +112,9 @@ form model =
         ]
 
 
-validateName : String -> Bool
-validateName name =
-    String.length name > 3
+characterCountIsGreaterThan : Int -> String -> Bool
+characterCountIsGreaterThan characterCount name =
+    String.length name > characterCount
 
 
 validateEmail : String -> Bool
