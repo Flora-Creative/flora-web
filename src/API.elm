@@ -79,3 +79,59 @@ getByName urlBase capture_name =
         , withCredentials =
             False
         }
+
+
+type alias ContactForm =
+    { origin : String
+    , name : String
+    , email : String
+    , subject : String
+    , message : String
+    , leaveMeBlank : Maybe String
+    }
+
+
+encodeContactForm : ContactForm -> Json.Encode.Value
+encodeContactForm x =
+    Json.Encode.object
+        [ ( "origin", Json.Encode.string x.origin )
+        , ( "name", Json.Encode.string x.name )
+        , ( "email", Json.Encode.string x.email )
+        , ( "subject", Json.Encode.string x.subject )
+        , ( "message", Json.Encode.string x.message )
+        , ( "leaveMeBlank", (Maybe.withDefault Json.Encode.null << Maybe.map Json.Encode.string) x.leaveMeBlank )
+        ]
+
+
+decodeContactForm : Decoder ContactForm
+decodeContactForm =
+    decode ContactForm
+        |> required "origin" string
+        |> required "name" string
+        |> required "email" string
+        |> required "subject" string
+        |> required "message" string
+        |> required "leaveMeBlank" (maybe string)
+
+
+postContact : String -> ContactForm -> Http.Request ContactForm
+postContact urlBase body =
+    Http.request
+        { method =
+            "POST"
+        , headers =
+            []
+        , url =
+            String.join "/"
+                [ urlBase
+                , "contact"
+                ]
+        , body =
+            Http.jsonBody (encodeContactForm body)
+        , expect =
+            Http.expectJson decodeContactForm
+        , timeout =
+            Nothing
+        , withCredentials =
+            False
+        }

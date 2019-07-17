@@ -1,17 +1,16 @@
 module Contact exposing (Model, Msg, init, update, view)
 
+import API exposing (decodeContactForm, encodeContactForm, postContact)
 import Bootstrap.Alert as Alert
 import Bootstrap.Button as Button
 import Bootstrap.Form as Form
-import Bootstrap.Form.Checkbox as Checkbox
 import Bootstrap.Form.Fieldset as Fieldset
 import Bootstrap.Form.Input as Input
 import Bootstrap.Form.Radio as Radio
-import Bootstrap.Form.Select as Select
 import Bootstrap.Form.Textarea as Textarea
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
+import Http
 import Regex exposing (Regex)
 import StyleSheet
 
@@ -41,7 +40,7 @@ init =
     , emailIsValid = False
     , submissionType = FeatureRequest
     , bodyText = ""
-    , bodyIsValid = True
+    , bodyIsValid = False
     , alertVisibility = Alert.closed
     }
 
@@ -65,6 +64,7 @@ type Msg
     | SetBodyText String
     | SetFormSubmissionType FormSubmissionType
     | AlertMsg Alert.Visibility
+    | FormAPIResponse (Result Http.Error API.ContactForm)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,10 +83,44 @@ update msg model =
             ( { model | submissionType = submissionType }, Cmd.none )
 
         Submit ->
-            ( { init | alertVisibility = Alert.shown }, Cmd.none )
+            Debug.log "Submitting form"
+                ( model, submitFormCommand model )
 
         AlertMsg visibility ->
             ( { model | alertVisibility = visibility }, Cmd.none )
+
+        FormAPIResponse result ->
+            case result of
+                Err error ->
+                    Debug.log (toString error)
+                        ( model, Cmd.none )
+
+                Ok apps ->
+                    Debug.log "Sent contact form successfully."
+                        ( { init | alertVisibility = Alert.shown }, Cmd.none )
+
+
+submitFormCommand : Model -> Cmd Msg
+submitFormCommand model =
+    let
+        contactForm =
+            formFromModel model
+
+        postRequest =
+            API.postContact "https://flora-api.herokuapp.com" contactForm
+    in
+    Http.send FormAPIResponse postRequest
+
+
+formFromModel : Model -> API.ContactForm
+formFromModel model =
+    { origin = "Website"
+    , name = model.name
+    , email = model.email
+    , subject = submissionTypeIdentifier model.submissionType
+    , message = model.bodyText
+    , leaveMeBlank = Nothing
+    }
 
 
 form : Model -> Html Msg
@@ -113,8 +147,8 @@ form model =
 
 
 characterCountIsGreaterThan : Int -> String -> Bool
-characterCountIsGreaterThan characterCount name =
-    String.length name > characterCount
+characterCountIsGreaterThan characterCount string =
+    String.length string > characterCount
 
 
 validateEmail : String -> Bool

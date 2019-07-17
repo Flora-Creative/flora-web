@@ -92,10 +92,10 @@ update msg model =
 
         ContactFormUpdated formMsg ->
             let
-                ( updated, _ ) =
+                ( updated, cmd ) =
                     Contact.update formMsg model.contactModel
             in
-            ( { model | contactModel = updated }, Cmd.none )
+            ( { model | contactModel = updated }, Cmd.map ContactFormUpdated cmd )
 
         SetDate date ->
             ( { model | date = date }, Cmd.none )
