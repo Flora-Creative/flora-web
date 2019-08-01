@@ -6,7 +6,6 @@ import App
 import Array exposing (..)
 import Bootstrap.CDN as CDN
 import Bootstrap.Navbar as Navbar
-import Bootstrap.Progress as Progress
 import Contact as Contact
 import Date exposing (Date)
 import Html exposing (..)
@@ -203,7 +202,7 @@ floraProjectContentView model =
                     div [] [ floraAppView model ]
 
         False ->
-            loadingView model
+            StyleSheet.loadingView
 
 
 view : Model -> Html Msg
@@ -252,19 +251,7 @@ errorView : Html Msg
 errorView =
     div
         StyleSheet.embeddedContentStyle
-        [ h3 [ StyleSheet.avenir, mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
-
-
-loadingView : Model -> Html Msg
-loadingView model =
-    div
-        (style [ ( "padding", "5em" ) ] :: StyleSheet.embeddedContentStyle)
-        [ Progress.progress
-            [ Progress.value 100
-            , Progress.animated
-            ]
-        , h3 [ StyleSheet.avenir, mainBodyTextStyle ] [ text "just a moment" ]
-        ]
+        [ h3 [ StyleSheet.avenir, StyleSheet.mainBodyTextStyle ] [ text "Something has gone wrong. We'll be back up soon." ] ]
 
 
 footerView : Model -> Html Msg
@@ -329,16 +316,6 @@ floraProjectTitle model =
     , h6 [ StyleSheet.avenir, StyleSheet.regular, style [ ( "text-align", "center" ) ] ] [ text floraProjectDescription ]
     , StyleSheet.separatorWithColor StyleSheet.blueGray
     ]
-
-
-mainBodyTextStyle : Attribute msg
-mainBodyTextStyle =
-    style
-        [ ( "text-align", "center" )
-        , ( "width", "70%" )
-        , ( "margin", "auto" )
-        , ( "color", StyleSheet.blueGray )
-        ]
 
 
 floraProjectDescription : String

@@ -1,6 +1,7 @@
 module StyleSheet exposing (..)
 
-import Html exposing (Attribute, hr)
+import Bootstrap.Progress as Progress
+import Html exposing (Attribute, div, h3, hr, text)
 import Html.Attributes exposing (style)
 
 
@@ -72,3 +73,25 @@ mutedMustard =
 separatorWithColor : String -> Html.Html msg
 separatorWithColor colorString =
     hr [ style [ ( "background-color", colorString ), ( "border", "none" ), ( "height", "1px" ) ] ] []
+
+
+loadingView : Html.Html msg
+loadingView =
+    div
+        (style [ ( "padding", "5em" ) ] :: embeddedContentStyle)
+        [ Progress.progress
+            [ Progress.value 100
+            , Progress.animated
+            ]
+        , h3 [ avenir, mainBodyTextStyle ] [ text "just a moment" ]
+        ]
+
+
+mainBodyTextStyle : Attribute msg
+mainBodyTextStyle =
+    style
+        [ ( "text-align", "center" )
+        , ( "width", "70%" )
+        , ( "margin", "auto" )
+        , ( "color", blueGray )
+        ]

@@ -17,7 +17,12 @@ import StyleSheet
 
 view : Model -> Html Msg
 view model =
-    div StyleSheet.embeddedContentStyle [ alert model, form model ]
+    case model.submissionPending of
+        False ->
+            div StyleSheet.embeddedContentStyle [ alert model, form model ]
+
+        True ->
+            StyleSheet.loadingView
 
 
 type alias Model =
@@ -29,6 +34,7 @@ type alias Model =
     , bodyText : String
     , bodyIsValid : Bool
     , alertVisibility : Alert.Visibility
+    , submissionPending : Bool
     }
 
 
@@ -42,6 +48,7 @@ init =
     , bodyText = ""
     , bodyIsValid = False
     , alertVisibility = Alert.closed
+    , submissionPending = False
     }
 
 
@@ -84,7 +91,7 @@ update msg model =
 
         Submit ->
             Debug.log "Submitting form"
-                ( model, submitFormCommand model )
+                ( { model | submissionPending = True }, submitFormCommand model )
 
         AlertMsg visibility ->
             ( { model | alertVisibility = visibility }, Cmd.none )
