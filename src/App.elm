@@ -158,7 +158,7 @@ carousel model =
 
 cloudinaryURL : String
 cloudinaryURL =
-    "https://res.cloudinary.com/hqlbxtu1v/image/upload/v1540411987/"
+    "https://res.cloudinary.com/hqlbxtu1v/image/upload/v1588371998/"
 
 
 makeImages : String -> List (Slide.Config msg)
